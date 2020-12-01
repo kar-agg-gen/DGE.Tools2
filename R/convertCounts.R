@@ -1,116 +1,117 @@
-### Function convertCounts ###
-#' Function convertCounts
+#' Convert count matrix to CPM, FPKM, FPK, or TPM
 #'
 #' Takes a count matrix as input and converts to other desired units.  Supported
-#' units include CPM, FPKM, FPK and TPM.  Output units can be logged
+#' units include CPM, FPKM, FPK, and TPM.  Output units can be logged
 #' and/or normalized.  Calculations are performed using edgeR functions except
 #' for the conversion to TPM which is converted from FPKM using the formula provided
 #' by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 #'
-#' geneLength is a vector where length(geneLength) == nrow(counts).  If you pass
-#' an RSEM effectiveLength matrix, rowMeans(effectiveLength) is used (because edgeR functions
+#' geneLength is a vector where length(geneLength) == nrow(counts). If a RSE effectiveLength
+#' matrix is passed as input, rowMeans(effectiveLength) is used (because edgeR functions
 #' only accept a vector for effectiveLength).
 #'
-#' Note that log2 values for CPM, TPM and FPKM employ edgeR's prior.count handling to avoid divide by zero.
-#'
-#' @author John Thompson, \email{john.thompson@@bms.com}
-#' @keywords RNA-Seq, unit conversion
+#' Note that log2 values for CPM, TPM, and FPKM employ edgeR's prior.count handling to avoid divide by zero.
 #'
 #' @param counts A numeric matrix or dataframe of N genes x M Samples.  All columns
 #' must be numeric.
 #' @param unit  Required. One of CPM, FPKM, FPK or TPM.
-#' @param geneLength A vector or matrix of gene lengths. Required for length-normalizes units (TPM, FPKM or FPK).
-#'    If you supply a matrix, the rowMeans are calculated and used.
+#' @param geneLength A vector or matrix of gene lengths. Required for length-normalized units (TPM, FPKM or FPK).
+#'    If geneLength is a matrix, the rowMeans are calculated and used.
 #' @param log Default = FALSE.  Set TRUE to return Log2 values.
 #'    Employs edgeR functions which use an prior.count of 0.25 scaled by the library size.
 #' @param normalize Default = "none". Other options: "TMM", "RLE", "upperquartile"
-#'  Invokes edgeR::calcNormFactors for normalization. Upperquartile uses the 75th percentile.  Normalize settings are case insensitive.
-#' @param prior.count Average count to be added to each observation to avoid taking log of zero. Used only if log=TRUE. (Default dependent on method;
-#'   0 for TPM, 0.25 for CPM and FPKM)
-#'   The prior.count is passed to edgeR cpm and rpkm functions and applies to logTPM, logCPM and logFPKM calculations.
+#'  Invokes edgeR::calcNormFactors() for normalization. Upperquartile uses the 75th percentile.  Normalize settings are case insensitive.
+#' @param prior.count Average count to be added to each observation to avoid taking log of zero.
+#'  Used only if log = TRUE. (Default dependent on method; 0 for TPM, 0.25 for CPM and FPKM)
+#'  The prior.count is passed to edgeR cpm and rpkm functions and applies to logTPM, logCPM, and logFPKM calculations.
 #'
 #' @return A matrix in the new unit space
 #'
 #' @examples
-#' #TMM normalized Log2FPKM
-#' Log2FPKM = convertCounts(mycounts),
-#'                       unit="fpkm",
-#'                       geneLength=gene.annotation$ExonLength,
-#'                       log=TRUE,
-#'                       normalize="tmm")
+#' \dontrun{
+#'     # TMM normalized Log2FPKM
+#'     Log2FPKM <- convertCounts(mycounts,
+#'                               unit = "fpkm",
+#'                               geneLength = gene.annotation$ExonLength,
+#'                               log = TRUE,
+#'                               normalize = "tmm")
 #'
-#' #un-normalized CPM (not logged)
-#' RawCPM = convertCounts(MyCounts,
-#'                       unit="CPM",
-#'                       log=FALSE,
-#'                       normalize="none")
+#'     # Non-normalized CPM (not logged)
+#'     RawCPM <- convertCounts(MyCounts,
+#'                             unit = "CPM",
+#'                             log = FALSE,
+#'                             normalize = "none")
+#' }
 #'
 #' @import magrittr
 #' @importFrom edgeR cpm rpkm expandAsMatrix calcNormFactors DGEList
 #' @importFrom assertthat assert_that
-#' @importFrom glue glue
 #'
 #' @export
 convertCounts <- function(counts,
                           unit,
                           geneLength,
-                          log=FALSE,
-                          normalize="none",
-                          prior.count=NULL,
-                          debug=FALSE) {
-    #   Good explanation of prior values in edgeR vs. voom CPM/elist values:
-    #   https://support.bioconductor.org/p/59846/
+                          log = FALSE,
+                          normalize = "none",
+                          prior.count = NULL) {
 
-    ### MAIN ###
-    #counts and unit are absolutely required
-    if (missing(counts))
-        stop ("counts is a required argument")
-
-    if (missing(unit))
-        stop ("unit is a required argument")
+    assertthat::assert_that(!(nrow(counts) == 0),
+                            msg = "counts must be specified.")
+    assertthat::assert_that(!is.null(unit),
+                            msg = "unit must be specified.")
 
     unit <- toupper(unit)
-    if (unit %in% c('FPKM', 'TPM', 'FPK')){
-        #in these cases geneLength is required
-        if (missing(geneLength))
-            stop("geneLength is required for unit = FPK|FPKM|TPM")
+    if (unit %in% c('FPKM', 'TPM', 'FPK')) {
+        # In these cases geneLength is required
+        assertthat::assert_that(!missing(geneLength),
+                                msg = "geneLength must be specified when unit is 'FPK', 'FPKM', or 'TPM.'")
 
-        if (class(geneLength)[[1]] == "matrix") #flatten to a vector
-            geneLength <- rowMeans(geneLength, na.rm=TRUE)
+        if ("matrix" %in% class(geneLength)) {# Flatten to a vector
+            geneLength <- rowMeans(geneLength, na.rm = TRUE)
+        }
     }
-    #make normalize method case insensitive (calcNormFactors is case sensitive)
-    if (toupper(normalize) %in% c("TMM", "RLE")) #these have to be uppercase
+    # Make normalize method case insensitive (calcNormFactors is case sensitive)
+    if (toupper(normalize) %in% c("TMM", "RLE")) {
         normalize <- toupper(normalize)
-    if (toupper(normalize) %in% c("UPPERQUARTILE", "NONE")) #these have to be lowercase
+    }
+    if (toupper(normalize) %in% c("UPPERQUARTILE", "NONE")) {
         normalize <- tolower(normalize)
-    if (toupper(normalize) %in% c("TMMWZP"))
-      normalize <- "TMMwzp"
+    }
+    if (toupper(normalize) %in% c("TMMWZP")) {
+        normalize <- "TMMwzp"
+    }
 
-    #Coerce counts to a matrix
-    result <- try({counts <- as.matrix(counts)}, silent=TRUE)
-    if (class(result)[[1]] == "try-error")
-        stop("Couldn't coerce counts to a numeric matrix!")
 
-    #Make sure geneLength is correct length
-    if (!missing(geneLength))
-        if (length(geneLength) != nrow(counts))
-            stop('Length(geneLength) does not match rowcount of counts')
+    # Coerce counts to a matrix
+    result <- counts <- as.matrix(counts)
+    assertthat::assert_that("matrix" %in% class(counts),
+                            msg = "counts must be able to be coerced to a matrix.")
 
-    #set defaults
-    if (missing(log))
-        log=FALSE
-    if (missing(normalize))
-        normalize='none'
-    if (is.logical(normalize)){ #don't encourage logicals; here for backward compatibility
-        if (normalize == TRUE)
+    # Make sure geneLength is correct length
+    if (!missing(geneLength)) {
+        assertthat::assert_that(length(geneLength) == nrow(counts),
+                                msg = "geneLength must be the same length of the number of rows in counts.")
+    }
+
+    # Set defaults
+    if (missing(log)) {
+        log = FALSE
+    }
+    if (missing(normalize)) {
+        normalize = 'none'
+    }
+    if (is.logical(normalize)) { # Don't encourage logicals; here for backward compatibility
+        if (normalize == TRUE) {
             normalize <- 'TMM'
-        if (normalize == FALSE)
+        }
+        if (normalize == FALSE) {
             normalize <- 'none'
+        }
     }
 
     if (is.null(prior.count)) {
-        if (log == FALSE){
-            prior.count <- 0 #not used when log=F
+        if (log == FALSE) {
+            prior.count <- 0 # Not used when log = F
         }
         else if (unit == "TPM") {
             prior.count <- 0
@@ -121,51 +122,180 @@ convertCounts <- function(counts,
     }
 
     result <- switch(toupper(unit),
-                     "CPM" = calcCPM(counts, log, normalize, prior.count, debug),
-                     "FPKM" = calcFPKM(counts, log, normalize, geneLength, prior.count, debug),
-                     "FPK" = calcFPK(counts, log, normalize, geneLength, prior.count, debug),
-                     "TPM" = calcTPM(counts, log, normalize, geneLength, prior.count, debug)
+                     "CPM" = calcCPM(counts, log, normalize, prior.count),
+                     "FPKM" = calcFPKM(counts, log, normalize, geneLength, prior.count),
+                     "FPK" = calcFPK(counts, log, normalize, geneLength, prior.count),
+                     "TPM" = calcTPM(counts, log, normalize, geneLength, prior.count)
     )
     return(result)
 }
 
-############### Helper Functions
 
-calcCPM <- function(counts, log, normalize, prior.count, debug){
-  #debug
-  if (debug) print(glue("CPM; log= {log}; normalize={normalize}; prior={prior.count}"))
-  if (nrow(counts) < 10000)
-    warning('You should use the whole dataset when calculating CPM, not a subset.')
-  counts %>%
-    edgeR::DGEList() %>%
-    edgeR::calcNormFactors(method=normalize) %>%
-    edgeR::cpm(log=log, prior.count=prior.count)
+#' Calculate TPM for a subsetted DGEobj
+#'
+#' Calculates TPM for a heavily subsetted DGEobj. The function will calculate TPM
+#' using the original data but returns a DGEobj with the subset.
+#'
+#' Internally, convertCounts uses edgeR::fpkm() to calculate FPKM and converts to TPM
+#' using the formula provided by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
+#'
+#' @param dgeObj A DGEobj data structure
+#' @param applyFilter Default = TRUE. If TRUE, reduces to the filtered gene list. FALSE returns
+#'   all genes in the raw data.
+#'
+#' @return A matrix in the new unit space
+#'
+#' @examples
+#' \dontrun{
+#'    myTPM <- tpm(DGEobj)
+#' }
+#' @import DGEobj magrittr
+#' @importFrom assertthat assert_that
+#' @export
+tpm.on.subset <- function(dgeObj, applyFilter = TRUE){
+
+    assertthat::assert_that("DGEobj" %in% class(dgeObj),
+                            msg = "dgeObj should be of class 'DGEobj'.")
+    assertthat::assert_that(attr(dgeObj, "level") %in% c("isoform", "gene"),
+                            msg = "The level of dgeObj should be of type 'isoform' or type 'gene'.")
+
+    # Default to gene level
+    level <- "gene"
+    if (attr(dgeObj, "level") == "isoform") {
+        level <- "isoform"
+    }
+
+    if (level == "gene") {
+        rowdata <- getItem(dgeObj, "geneData_orig")
+    } else {
+        rowdata <- getItem(dgeObj, "isoformData_orig")
+    }
+
+    # Get geneLength depending on source data
+    if (attr(dgeObj, "source") == "Omicsoft") { # Omicsoft data
+        geneLength <- rowdata$ExonLength
+    } else if ("effectiveLength_orig" %in% names(dgeObj)) { # Use rowMeans(effectiveLength)
+        geneLength <- rowMeans(getItem(dgeObj, "effectiveLength_orig"), na.rm = TRUE)
+    }
+
+    TPM <- convertCounts(getItem(dgeObj, "counts_orig"),
+                         geneLength = geneLength,
+                         unit = "tpm",
+                         log = FALSE,
+                         normalize = FALSE)
+
+    # Remove filtered out genes
+    if (applyFilter == TRUE) {
+        idx <- rownames(TPM) %in% rownames(getItem(dgeObj, "counts"))
+        TPM <- TPM[idx,]
+    }
+    return(TPM)
 }
 
-calcFPKM <- function(counts, log, normalize, geneLength, prior.count, debug){
-  #debug
-  if (debug) print(glue("FPKM; log= {log}; normalize={normalize}; prior={prior.count}"))
-  if (nrow(counts) < 10000)
-    warning('You should use the whole dataset when calculating FPKM, not a subset.')
-  counts %>%
-    edgeR::DGEList() %>%
-    edgeR::calcNormFactors(method=normalize) %>%
-    edgeR::rpkm(log=log, gene.length=geneLength, prior.count=prior.count)
+
+#' Convert counts and geneLength to TPM units
+#'
+#' Takes a counts and geneLength as input and converts to TPM units using the equation from
+#' [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
+#'
+#' The result should be the same as using convertCounts with normalize = 'tpm' and log = FALSE.
+#'
+#' geneLength can be a vector (length == nrow(counts)) or a matrix (same dim as counts).
+#' The geneLength is used as is, or optionally collapsed to a vector by rowMeans.
+#'
+#' @param counts A numeric matrix of N genes x M samples. All columns must be numeric.
+#' @param geneLength Numeric matrix of gene lengths. Often the ExonLength item of a DGEobj.
+#' @param collapse Default = FALSE. TRUE or FALSE determines whether to use rowMeans on the geneLength matrix.
+#'
+#' @return A matrix of TPM values
+#'
+#' @examples
+#' \dontrun{
+#'   myTPM <- tpm.direct(myCounts, myGeneLength)
+#' }
+#'
+#' @import magrittr
+#' @importFrom edgeR expandAsMatrix
+#' @importFrom assertthat assert_that
+#'
+#' @export
+tpm.direct <- function(counts,
+                       geneLength,
+                       collapse = FALSE) {
+
+    if (!is.matrix(counts)) {
+        result <- counts <- as.matrix(counts)
+        assertthat::assert_that("matrix" %in% class(result),
+                                msg = "counts must be able to be coerced to a matrix.")
+    }
+
+    if (is.vector(geneLength)) {
+        assertthat::assert_that(length(geneLength) == nrow(counts),
+                                msg = "geneLength should be of the same length as the number of rows in counts.")
+    } else {
+        if (!is.matrix(geneLength)) {
+            result <- geneLength <- as.matrix(geneLength)
+            assertthat::assert_that("matrix" %in% class(result),
+                                    msg = "geneLength must be able to be coerced to a matrix.")
+            assertthat::assert_that(all(dim(counts) == dim(geneLength)),
+                                    msg = "The dimensions of counts and geneLength should match.")
+        }
+    }
+
+    if (collapse & is.matrix(geneLength)) {
+        geneLength <- rowMeans(geneLength, na.rm = TRUE)
+    }
+
+    # Calculation  (fpk / colsum(fpk) ) * 10e6
+    fpb <- counts / geneLength
+    sumfpb <- colSums(fpb)
+    tpm <- fpb / edgeR::expandAsMatrix(sumfpb, byrow = TRUE, dim = dim(fpb)) * 1e6
 }
 
-calcTPM <- function(counts, log, normalize, geneLength, prior.count, debug){
-    #debug
-    if (debug) print(glue("TPM; log= {log}; normalize={normalize}; prior={prior.count}"))
-    if (nrow(counts) < 10000)
+# Helper Functions
+calcCPM <- function(counts, log, normalize, prior.count){
+    if (nrow(counts) < 10000) {
+        warning('You should use the whole dataset when calculating CPM, not a subset.')
+    }
+
+    counts %>%
+        edgeR::DGEList() %>%
+        edgeR::calcNormFactors(method = normalize) %>%
+        edgeR::cpm(log = log, prior.count = prior.count)
+}
+
+calcFPKM <- function(counts, log, normalize, geneLength, prior.count){
+    if (nrow(counts) < 10000) {
+        warning('You should use the whole dataset when calculating FPKM, not a subset.')
+    }
+
+    counts %>%
+        edgeR::DGEList() %>%
+        edgeR::calcNormFactors(method = normalize) %>%
+        edgeR::rpkm(log = log, gene.length = geneLength, prior.count = prior.count)
+}
+
+calcTPM <- function(counts, log, normalize, geneLength, prior.count){
+    if (nrow(counts) < 10000) {
         warning('You should use the whole dataset when calculating TPM, not a subset.')
-    if (normalize != "none")
-        warning(glue('TPM normalization overides {normalize} normalization!'))
-    if (prior.count != 0 && log == TRUE)
-        warning("Using a prior.count for logtpm calculations is not recommended and may produce unpredictable results!")
-    fpkm <- calcFPKM(counts, log=log, normalize=normalize,
-                     geneLength = geneLength, prior.count=prior.count, debug)
+    }
+    if (normalize != "none") {
+        warning(paste('TPM normalization overides', normalize, 'normalization!'))
+    }
+    if (prior.count != 0 && log == TRUE) {
+        warning("Using a prior.count for logTPM calculations is not recommended and may produce unpredictable results!")
+    }
 
-    if (log==FALSE){
+    fpkm <- calcFPKM(counts, log = log, normalize = normalize,
+                     geneLength = geneLength, prior.count = prior.count)
+
+    # Helper function
+    fpkmToTpm <- function(fpkm) {
+        colSumMat <- edgeR::expandAsMatrix(colSums(fpkm, na.rm = TRUE), byrow = TRUE, dim = dim(fpkm))
+        fpkm / colSumMat * 1e6
+    }
+
+    if (log == FALSE) {
         TPM <- fpkmToTpm(fpkm)
     } else {
         TPM <- log2(fpkmToTpm(2^fpkm))
@@ -173,160 +303,20 @@ calcTPM <- function(counts, log, normalize, geneLength, prior.count, debug){
     return(TPM)
 }
 
-calcFPK <- function(counts, log, normalize, geneLength, prior.count, debug){
-    #debug
-    if (debug) print(glue("FPK; log= {log}; normalize={normalize}; prior={prior.count}"))
-    if (tolower(normalize) == 'none'){
-        #check for zero geneLength just in case
-        if (min(geneLength) == 0) geneLength <- geneLength + 1
+calcFPK <- function(counts, log, normalize, geneLength, prior.count){
+    if (tolower(normalize) == 'none') {
+        # Check for zero geneLength just in case
+        if (min(geneLength) == 0) {
+            geneLength <- geneLength + 1
+        }
 
-        FPK <- counts / (geneLength/1000)
+        FPK <- counts / (geneLength / 1000)
 
-        if (log == TRUE)
+        if (log == TRUE) {
             FPK <- log2(FPK + prior.count)
-    } else {
-        #why would you want normalized FPK???
-        #See Mark Robinson response on how to get normalized counts
-        #from edgeR
-        #https://stat.ethz.ch/pipermail/bioconductor/2012-July/046795.html
-        #JRT: I haven't validated this because I can think of no reason
-        #why you'd want normalized FPK
-        stop("FPK should not be normalized")
-    }
-    return(FPK)
-}
-
-fpkmToTpm <- function(fpkm)
-{
-    colSumMat <- edgeR::expandAsMatrix(colSums(fpkm, na.rm=TRUE), byrow=TRUE, dim=dim(fpkm))
-    #exp(log(fpkm) - log(colSumMat) + log(1e6)) #only works with fpkm vector
-    fpkm / colSumMat * 1e6
-}
-
-### Function tpm.on.subset ###
-#' Function tpm.on.subset
-#'
-#' Use this to calculate TPM for a heavily subsetted DGEobj.  It calculates TPM
-#' using the original data but returns a DGEobj with the subset.
-#'
-#' Takes a DGEObj as input. Uses all data (pre-genefiltering; counts_orig) to
-#' calculate TPM values. Then optionally filters any genes that were already
-#' filtered out.
-#'
-#' For GeneLength in the calculation, it takes geneData$ExonLength (for Omicsoft data)
-#' or uses rowMeans(effectiveLength) for data derived from Xpress.
-#'
-#' Internally it uses edgeR::fpkm to calculate fpkm and converts to tpm
-#' using the formula provided  by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
-#'
-#' @author John Thompson, \email{john.thompson@@bms.com}
-#' @keywords RNA-Seq, unit conversion
-#'
-#' @param dgeo A DGEobj data structure
-#' @param applyFilter If TRUE, reduces to the filtered gene list. FALSE returns
-#'   all genes in the raw data. [Default = TRUE]
-#'
-#' @return A matrix in the new unit space
-#'
-#' @examples
-#' myTPM <- tpm(dgeobj)
-#'
-#' @import DGEobj magrittr
-#' @importFrom assertthat assert_that
-#' @export
-tpm.on.subset <- function(dgeo, applyFilter=TRUE){
-
-    assertthat::assert_that(class(dgeo)[[1]] == "DGEobj")
-
-    #default to gene level
-    level <- "gene"
-    if (attr(dgeo, "level") == "isoform")
-        level <- "isoform"
-
-    #Not supporting Exon level yet.  Not sure where to grab the geneLength data from for exon level
-    if (attr(dgeo, "level") == "exon")
-        stop("Exon level not supported; contact JRT and make the request")
-
-    if (level == "gene")
-        rowdata <- getItem(dgeo, "geneData_orig")
-    else
-        rowdata <- getItem(dgeo, "isoformData_orig")
-
-    #get genelength depending on source data (omicsoft or xpress)
-    if (attr(dgeo, "source") == "Omicsoft"){ #Omicsoft data
-        geneLength <- rowdata$ExonLength
-    } else if ("effectiveLength_orig" %in% names(dgeo)) { #use rowMeans(effectiveLength)
-        geneLength <- rowMeans(getItem(dgeo, "effectiveLength_orig"), na.rm=TRUE)
-    } else {
-        stop("Couldn't find gene/isoform length data in DGEobj")
-    }
-
-    TPM <- convertCounts(getItem(dgeo, "counts_orig"), geneLength=geneLength, unit="tpm",
-                         log=FALSE, normalize=FALSE)
-
-    #remove filtered out genes
-    if (applyFilter == TRUE){
-        idx <- rownames(TPM) %in% rownames(getItem(dgeo, "counts"))
-        TPM <- TPM[idx,]
-    }
-    return(TPM)
-}
-
-### Function tpm.direct ###
-#' Function tpm.direct
-#'
-#' Takes a counts and genelength as input and converts to tpm units using the equation from
-#' [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
-#'
-#' The result should be the same as using convertCounts with normalize='tpm' and log=FALSE
-#'
-#' Genelength can be a vector (length == nrow(counts) or a matrix (same dim as counts).
-#' The genelength is used as is, or optionally collapsed to a vector by rowMeans.
-#'
-#' @author John Thompson, \email{john.thompson@@bms.com}
-#' @keywords RNA-Seq, unit conversion
-#'
-#' @param counts A numeric matrix of N genes x M Samples.  All columns
-#' must be numeric.
-#' @param geneLength A vector or matrix of gene lengths.
-#' @param collapse T/F determines whether to use rowMeans on the genelength matrix [Default = FALSE]
-#'
-#' @return A matrix of TPM values
-#'
-#' @examples
-#' myTPM <- tpm.classic(mycounts, mygenelength)
-#'
-#' @import magrittr
-#' @importFrom edgeR expandAsMatrix
-#' @importFrom assertthat assert_that
-#' @export
-tpm.direct <- function (counts, genelength, collapse=FALSE){
-    #equation for TPM from https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/
-
-    if (!is.matrix(counts)){ #try to coerce
-        result <- try(counts <- as.matrix(counts), silent=TRUE)
-        if (class(result) == "try-error")
-            stop("Couldn't coerce counts to a matrix!")
-    }
-
-    if (is.vector(genelength)){
-        assertthat::assert_that(length(genelength) == nrow(counts))
-    } else { #try to coerce
-        if (!is.matrix(genelength)){
-            result <- try(genelength <- as.matrix(genelength), silent=TRUE)
-            if (class(result) == "try-error")
-                stop("Couldn't coerce genelength to a matrix!")
-            assertthat::assert_that(all(dim(counts) == dim(genelength)))
         }
     }
 
-    if (collapse & is.matrix(genelength)) { #reduce genelength to a vector
-        genelength <- rowMeans(genelength, na.rm=TRUE)
-    }
-
-    #the calculation  (fpk / colsum(fpk) ) * 10e6
-    fpb <- counts / genelength
-    sumfpb <- colSums(fpb)
-    tpm <- fpb / edgeR::expandAsMatrix(sumfpb, byrow = TRUE, dim=dim(fpb)) * 1e6
-    # tpm <- t(t(fpb)/sumfpb) * 1e6
+    return(FPK)
 }
+

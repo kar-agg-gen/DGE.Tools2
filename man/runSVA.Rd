@@ -2,34 +2,31 @@
 % Please edit documentation in R/runSVA.R
 \name{runSVA}
 \alias{runSVA}
-\title{Function  runSVA}
+\title{Test for surrogate variables}
 \usage{
-runSVA(dgeObj, designMatrixName, method = "leek")
+runSVA(dgeObj, designMatrixName, method = "leek", saveSv = FALSE)
 }
 \arguments{
 \item{dgeObj}{A DGEobj with normalized counts and a DesignMatrix.}
 
-\item{designMatrixName}{The itemName of the design matrix in DGEobj}
+\item{designMatrixName}{The itemName of the design matrix in DGEobj.}
 
-\item{method}{method passed to num.sv. ["leek" or "be"; default = "leek"]}
+\item{method}{Method passed to num.sv. Supports "leek" or "be". (Default = "leek")}
+
+\item{saveSv}{Save the surrogate variables in rds file. (Default = FALSE)}
 }
 \value{
-dgeObj The DGEobj is returned containing a new design matrix and an updated design table.
+dgeObj containing a new design matrix and an updated design table.
 }
 \description{
-Takes an DGEobj from runVoom and tests for surrogate variables.  Adds a new
-design matrix to the DGEobj with the surrogate variable columns appended (cbind).
+Takes an DGEobj from runVoom and tests for surrogate variables. Adds a new
+design matrix to the DGEobj with the surrogate variable columns appended using cbind.
 runVoom should then be run again with the new design matrix to complete the
 analysis.
 }
 \examples{
-MyDgeObj = runSVA (MyDgeObj)
+\dontrun{
+   myDGEobj <- runSVA(myDGEobj)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGEobj}
-\keyword{SVA}
-\keyword{surrogate}
-\keyword{variable}

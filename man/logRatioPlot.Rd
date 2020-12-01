@@ -2,7 +2,7 @@
 % Please edit documentation in R/logRatioPlot.R
 \name{logRatioPlot}
 \alias{logRatioPlot}
-\title{Function logRatioPlot}
+\title{Plot logRatio contrasts}
 \usage{
 logRatioPlot(
   data,
@@ -38,46 +38,47 @@ logRatioPlot(
   facet = TRUE,
   facetCol,
   xAngle = 45,
-  scales = "free_y",
-  debug = FALSE
+  scales = "free_y"
 )
 }
 \arguments{
-\item{data}{A tidy dataframe of data to plot (required) (see ?tidyContrasts).}
+\item{data}{A tidy dataframe of data to plot (Required) (see ?tidyContrasts).}
 
-\item{facetColname}{Define the column name to separate plots (required) (e.g. GeneID).}
+\item{facetColname}{Define the column name to separate plots (Required) (e.g. GeneID).}
 
-\item{xColname}{Define the column name to group boxplots by (required) (e.g. Contrast).}
+\item{xColname}{Define the column name to group boxplots by (Required) (e.g. Contrast).}
+
+\item{yColname}{Define the column name for the output of the boxplots (Default = "logFC")}
 
 \item{CI.R_colname}{Define name of the CI high value (Default = "CI.R")}
 
 \item{CI.L_colname}{Define name of the CI low value (Default =  "CI.L")}
 
 \item{xOrder}{Define the order for the groups in each plot.  Should
-contain values in unique(data$group) listed in the order that you want the
-groups to appear in the plot. (optional; default = unique(data[xColname]))}
+contain values in unique(data$group) listed in the order that
+groups should appear in the plot. (Optional; Default = unique(data[xColname]))}
 
-\item{plotType}{one of "bar" or "point" (Default = bar")}
+\item{plotType}{One of "bar" or "point" (Default = "bar")}
 
-\item{refLine}{Adds a horizontal line at y=0 (Default=TRUE)}
+\item{refLine}{Adds a horizontal line at y = 0 (Default = TRUE)}
 
-\item{refLineColor}{Color for the reference line (Default="red")}
+\item{refLineColor}{Color for the reference line (Default = "red")}
 
-\item{xlab}{X axis label (defaults to xColname)}
+\item{xlab}{X axis label (Defaults to xColname)}
 
-\item{ylab}{Y axis label (defaults to yColname)}
+\item{ylab}{Y axis label (Defaults to yColname)}
 
-\item{title}{Plot title (optional)}
+\item{title}{Plot title (Optional)}
 
-\item{barColor}{Color for the bar outline (default = "dodgerblue4")}
+\item{barColor}{Color for the bar outline (Default = "dodgerblue4")}
 
-\item{barFill}{Color for the bar area (default = "dodgerblue3")}
+\item{barFill}{Color for the bar area (Default = "dodgerblue3")}
 
-\item{barSize}{set the bar size (thickness of each bar perimeter; default = 0.1)}
+\item{barSize}{Set the bar size (thickness of each bar perimeter; Default = 0.1)}
 
 \item{barAlpha}{Transparency for the bar layer (Default = 1)}
 
-\item{barWidth}{set the bar width (Default = 0.8)}
+\item{barWidth}{Set the bar width (Default = 0.8)}
 
 \item{pointColor}{Color for the point layer (Default = "grey30")}
 
@@ -110,75 +111,63 @@ respectively. (Default = "bw")}
 \item{facet}{Specifies whether to facet (TRUE) or print individual plots
 (FALSE)  (Default = TRUE)}
 
-\item{facetCol}{Explicitly set the number of Rows for the facet plot. Default
+\item{facetCol}{Explicitly set the number of rows for the facet plot. Default
 behavior will automatically set the columns. (Default = ceiling(sqrt(length(unique(data[facetCol])))))}
 
-\item{xAngle}{Angle to set the sample labels on the Xaxis (Default =  45; Range = 0-90)}
+\item{xAngle}{Angle to set the sample labels on the X axis (Default =  45; Range = 0-90)}
 
 \item{scales}{Specify same scales or independent scales for each subplot (Default = "free_y";
 Allowed values: "fixed", "free_x", "free_y", "free")}
-
-\item{debug}{Turn on debug mode (default = FALSE)}
-
-\item{yColame}{Define the column of values for plotting (Default = "logFC").}
-
-\item{addLine}{Adds a line if point layer chosen (Default = FALSE)}
 }
 \value{
-ggplot If Facet=TRUE (default) returns a facetted ggplot object. If
-  facet=FALSE, returns a list of ggplot objects indexed
+ggplot object. If facet = TRUE (default), returns a faceted ggplot object. If
+  facet = FALSE, returns a list of ggplot objects indexed
   by observation (gene) names.
 }
 \description{
 Intended to plot a set of contrast results, one plot for each gene of
 interest. Input is a tidy datafile constructed from topTable output and
-requires logFC, CI.L and CI.R columns as well as a gene identifier of choice.
-Outputs a ggplot object facetted by the facetColname or a list of individual
+requires logFC, CI.L, and CI.R columns as well as a gene identifier of choice.
+Outputs a ggplot2 object faceted by the facetColname or a list of individual
 ggplots, one for each facetColname value (typically gene).
 }
 \examples{
+\dontrun{
+  # DGEobj example
+  # Put contrasts in tidy format keeping logFC, and confidence limits data
+  tidyDat <- tidyContrasts(DGEobj,
+                           rownameColumn = "EnsgID",
+                           includeColumns = c("logFC", "CI.R", "CI.L"))
 
-  #DGEobj example
-  #Put contrasts in tidy format keeping logFC, and confidence limits data
-  tidyDat <-tidyContrasts(dgeObj, rownameColumn="EnsgID", includeColumns = c("logFC", "CI.R", "CI.L"))
+  # Add gene symbols from geneData
+  ens2genesym <- DGEobj$geneData \%>\%
+                 rownames_to_column(var = "EnsgID") \%>\%
+                 select(EnsgID, GeneSymbol = GeneName)
+  tidyDat <- left_join(tidyDat, ens2genesym)
 
-  #add gene symbols from geneData
-  ens2genesym <- dgeObj$geneData \%>\%
-                 rownames_to_column(var="EnsgID") \%>\%
-                 select(EnsgID, GeneSymbol=GeneName)
-  tidyDat <-  left_join(tidyDat, ens2genesym)
-
-  #filter for a small set of genes of interest
+  # Filter for a small set of genes of interest
   idx <- stringr::str_detect(tidyDat$GeneSymbol, "^PPAR")
   tidyDat <- tidyDat[idx,]
 
-  #simple barplot
+  # Simple barplot
   logRatioPlot(tidyDat,
-              facetColname = "GeneSymbol",
-              xColname = "Contrast",
-              facetCol = 2)
+               facetColname = "GeneSymbol",
+               xColname = "Contrast",
+               facetCol = 2)
 
-  #lineplot with some options
-  logRatioPlot(tidyDat, plotType="point",
-                     facetColname = "GeneSymbol",
-                     xColname = "Contrast",
-                     facetCol=4,
-                     scales="fixed",
-                     facet=TRUE,
-                     title = "Test",
-                     pointSize=4,
-                     lineLayer=TRUE,
-                     lineSize=0.1,
-                     xAngle=60)
+  # Lineplot with some options
+  logRatioPlot(tidyDat,
+               plotType = "point",
+               facetColname = "GeneSymbol",
+               xColname = "Contrast",
+               facetCol = 4,
+               scales = "fixed",
+               facet = TRUE,
+               title = "Test",
+               pointSize = 4,
+               lineLayer = TRUE,
+               lineSize = 0.1,
+               xAngle = 60)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{barplot}
-\keyword{confidence}
-\keyword{contrasts}
-\keyword{gplot2}
-\keyword{intervals}
-\keyword{lineplot}
-\keyword{logratio}

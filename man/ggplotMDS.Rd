@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplotMDS.R
 \name{ggplotMDS}
 \alias{ggplotMDS}
-\title{Function ggplotMDS}
+\title{Create limma MDS plot using ggplot2}
 \usage{
 ggplotMDS(
   DGEdata,
@@ -43,41 +43,40 @@ OR a DGEobj that contains a DGEList OR a log2cpm matrix. (Required)}
 
 \item{sizeBy}{A numeric vector to define point size (Optional)}
 
-\item{top}{Number of most variant genes to include (default = Inf)}
+\item{top}{Number of most variant genes to include (Default = Inf)}
 
-\item{labels}{Text labels for the samples.  These should be short
+\item{labels}{Text labels for the samples. These should be short
 abbreviations of the sample identifiers.
-Default = ReplicateGroup or rownames of DGEdata.  Set to NULL to disable
-text labels}
+Default = ReplicateGroup or rownames of DGEdata. Set to NULL to disable
+text labels.}
 
-\item{labelSize}{control the Size for the text labels in the plot if you
-don't like the default}
+\item{labelSize}{Control size for the text labels in the plot,}
 
-\item{title}{A title for the plot (Optional)}
+\item{title}{A title for the plot. (Optional)}
 
-\item{textColor}{Color for the text labels in the plot (default = "blue2")}
+\item{textColor}{Color for the text labels in the plot (Default = "blue2")}
 
 \item{hlineIntercept}{Y intercept of horizontal line (Optional)}
 
 \item{vlineIntercept}{X intercept of vertical line (Optional)}
 
-\item{reflineColor}{Color for the horizontal and vertiacl reference lines
+\item{reflineColor}{Color for the horizontal and vertical reference lines
 (Default = "darkgoldenrod1")}
 
 \item{reflineSize}{Thickness of the reference lines (Default = 0.5)}
 
-\item{baseFontSize}{Base fontsize for the plot (Default = 12)}
+\item{baseFontSize}{Base font size for the plot (Default = 12)}
 
 \item{themeStyle}{One of "grey" or "bw" (Default = "grey")}
 
-\item{symShape}{Set the default shape of the symbols if not mapped to a column (Default = 19 solid circle)}
+\item{symShape}{Set the default shape of the symbols if not mapped to a column (Default = 19, solid circle)}
 
 \item{symSize}{Set the default size of the symbols if not mapped to a column
 (Default = 5)}
 
 \item{symFill}{Set color for the fill on open symbols (Default = "blue2")}
 
-\item{symColor}{set color for solid symbols or outline for open symbols
+\item{symColor}{Set color for solid symbols or outline for open symbols
 (Default = "blue2")}
 
 \item{alpha}{Set transparency (Default = 0.7)}
@@ -86,7 +85,7 @@ don't like the default}
 
 \item{colors}{A color pallet to substitute for the default 8 color pallet used by colorBy (optional)}
 
-\item{dim.plot}{Define which dimension to plot (default = c(1,2))}
+\item{dim.plot}{Define which dimension to plot (Default = c(1,2))}
 
 \item{colorName}{Legend title for color (optional)}
 
@@ -95,43 +94,37 @@ don't like the default}
 \item{sizeName}{Legend title for size (optional)}
 }
 \value{
-A list with two elements, the ggplot object and the mds object returned
-   by the plotMDS function.
+A list with two elements, the ggplot object and the MDS object returned
+   by the plotMDS() function.
 }
 \description{
 This is a wrapper around the plotMDS function that generates the plot with
 ggplot2 instead of base graphics.
 }
 \details{
-colorBy, shapeBy and sizeBy are grouping variables to encode group info by
-color, shape or size.  These are vectors that must be the same length as
-ncol(DGEdata).  colorBy and sizeBy will plot as continuous color or size
-changes if a numeric vector is used.  Convert the vector to a factor to
+colorBy, shapeBy, and sizeBy are grouping variables that encode group info by
+color, shape, or size.  These are vectors that must be the same length as
+ncol(DGEdata). colorBy and sizeBy will plot as continuous color or size
+changes if a numeric vector is used. Convert the vector to a factor to
 treat as groups instead of continuous.
 
-The underlying plotMDS function uses a default of top=500 to use the top 500
-highest fold change genes for the analysis.  The method runs quick and I've
-found situations where a larger value produced a more stable result.  Thus
-I've change the default to top=Inf.  You should play with this parameter and
-at least try a number that is close to the number of differential genes
-detected in your data.
+The underlying limma::plotMDS() function uses a default of top = 500 to use the top 500
+highest fold change genes for the analysis. Based on observed speed tests,
+top = Inf has been utilized as the default for this function, as it was shown to quickly produce
+a more stable result. However, this is configurable using the top argument, which
+allows for selection of a number close the number of differential genes in the
+input data.
 }
 \examples{
+\dontrun{
+     # Plot the first two dimensions using all genes
+     MyMDS = ggplotMDS(MyDGEList)
+     # Display the plot and save a png file.
+     printAndSave(MyMDS[[1]], file = "MyMDS.PNG", width = 5, height = 5)
 
-     #Plot the first two dimensions using all genes
-     MyMDS = ggplotMDS (MyDGEList)
-     #display the plot and save a png file.
-     printAndSave (MyMDS[[1]], file = "MyMDS.PNG", width=5, height=5)
-
-     #plot the 2nd and 3rd dimensions using the top 1000 genes
-     MyMDS = ggplotMDS (MyDGEList, dim.plot=c(2,3) ndim =3)
+     # Plot the 2nd and 3rd dimensions using the top 1000 genes
+     MyMDS = ggplotMDS (MyDGEList, dim.plot = c(2, 3) ndim = 3)
      MyMDS[[1]]
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGE,}
-\keyword{MDS,}
-\keyword{QC}
-\keyword{RNA-Seq,}

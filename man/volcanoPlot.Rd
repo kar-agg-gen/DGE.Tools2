@@ -2,7 +2,7 @@
 % Please edit documentation in R/volcanoPlot.R
 \name{volcanoPlot}
 \alias{volcanoPlot}
-\title{Deluxe Volcano Plots}
+\title{Create volcano plot}
 \usage{
 volcanoPlot(
   df,
@@ -37,51 +37,53 @@ volcanoPlot(
 }
 \arguments{
 \item{df}{A dataframe with LogRatio and LogIntensity columns and optionally a
-pvalue or FDR column (typically a topTable dataframe).}
+p-value or FDR column (typically a topTable dataframe).}
 
-\item{logRatioCol}{name of the LogRatio column (Default = "logFC")}
+\item{logRatioCol}{Name of the LogRatio column (Default = "logFC")}
 
-\item{logIntCol}{name of the LogIntensity column (Default = "AveExpr")}
+\item{logIntCol}{Name of the LogIntensity column (Default = "AveExpr")}
 
-\item{pvalCol}{name of the pvalue or FDR column (Default = "P.Value")}
+\item{pvalCol}{Name of the p-value or FDR column (Default = "P.Value")}
 
-\item{pthreshold}{Used to color points (default = 0.01)}
+\item{pthreshold}{Used to color points (Default = 0.01)}
 
 \item{geneSymLabels}{A character vector of gene to label (must be the name space of the column
 specified by geneSymCol)}
 
 \item{geneSymCol}{Name of the gene symbol column in df.  The gene symbol is
 not in topTable output by default so the user has to bind this column
-to the dataframe in advance.  Then this column will be used to label
-significantly changed points}
+to the dataframe in advance.  This column will be used to label
+significantly changed points.}
 
-\item{xlab}{X axis label (default the LogIntensity column name)}
+\item{xlab}{X axis label (Default is the LogIntensity column name)}
 
-\item{ylab}{Y axis label (default the LogRatio column name)}
+\item{ylab}{Y axis label (Default is the LogRatio column name)}
 
 \item{title}{Plot title (optional)}
 
-\item{symbolSize}{Size of symbols for Up, no change and Down. default = c(4,
-3.99, 4); Note: you cannot choose the exact same size for all three.  But
-you can use decimal values.}
+\item{symbolSize}{Size of symbols for Up, no change, and Down. default = c(4,
+3.99, 4); Note: All three cannot be the same size. Decimal values are acceptable to help offset that
+(e.g. 4, 4.1, 4.2).}
 
-\item{symbolShape}{Shape of the symbols for Up, no change and Down; Default =
-c(21, 1, 21) (1 = open circle, 21 = fillable open circle); Note: you cannot
-choose the same symbol shape for all three. See
+\item{symbolShape}{Shape of the symbols for Up, no change, and Down; Default =
+c(21, 1, 21) (1 = open circle, 21 = fillable open circle); Note: The same symbol shape cannot
+be selected for all three symbols. See
 \url{http://www.cookbook-r.com/Graphs/Shapes_and_line_types}}
 
 \item{symbolColor}{c(Up, NoChange, Down); default = c("black", "grey25",
 "grey0") See \url{http://research.stowers-institute.org/efg/R/Color/Chart}
-Note: You cannot duplicate colors.}
+Note: Colors cannot be duplicated.}
 
 \item{symbolFill}{Set the fill color for the symbols. Note only symbols 21-25
 are fillable. This will have no effect on other symbols. Default =
-c("red3", "grey25", "deepskyblue4") Note: You cannot duplicate colors.}
+c("red3", "grey25", "deepskyblue4") Note: Colors cannot be duplicated.}
 
 \item{alpha}{Controls the transparency of the plotted points (range: 0-1;
 default = 0.7)}
 
-\item{pthresholdLine}{Color for a horizontal line at the pthreshold (Default
+\item{sizeByIntensity}{If TRUE, creates a column to support sizeByIntensity. (Default = TRUE)}
+
+\item{pthresholdLine}{Color for a horizontal line at the p-threshold (Default
 = NULL (disabled))}
 
 \item{foldChangeLines}{Position of reference vertical lines for fold change
@@ -95,12 +97,12 @@ default = 0.7)}
 figure.  ne/se/nw/sw place the figure inside the figure. NULL disables the
 legend. Default = "right"}
 
-\item{rugColor}{Specify color for rug density plot along xy axes. Set to NULL
-to disable rug layer. (Default=NULL)}
+\item{rugColor}{Specify color for rug density plot along x and y axes. Set to NULL
+to disable rug layer. (Default = NULL)}
 
-\item{rugAlpha}{Sets the transparency for the rug layer.  An alpha <1.0 takes
-a long time to draw (~10 min on 32bit Win7).  So I set the default at 1.0,
-but for a final plot try 0.1 or 0.2 for alpha for a more informative rug.}
+\item{rugAlpha}{Sets the transparency for the rug layer.  An alpha <1.0 can take
+a long time to draw, so the default = 1.0.
+For a final plot try 0.1 or 0.2 for alpha for a more informative rug.}
 
 \item{baseFontSize}{The smallest size font in the figure in points. Default =
 12}
@@ -108,79 +110,64 @@ but for a final plot try 0.1 or 0.2 for alpha for a more informative rug.}
 \item{themeStyle}{"bw" or "grey" which correspond to theme_bw or theme_grey
 respectively. Default = bw"}
 
-\item{footnote}{optional string placed right justified at bottom of plot.}
+\item{footnote}{Optional string placed right justified at bottom of plot.}
 
-\item{footnoteSize}{applies to footnote. (default = 3)}
+\item{footnoteSize}{Applies to footnote. (Default = 3)}
 
-\item{footnoteColor}{applies to footnote. (default = "black")}
+\item{footnoteColor}{Applies to footnote. (Default = "black")}
 
-\item{footnoteJust}{Value 0-1. 0 is left justified, 1 is right justified, 0.5 is centered. (default=1)}
-
-\item{scaleByIntensity}{Set point size as a function of Intensity (Default =
-TRUE). Takes logIntCol and sets a floor and ceiling at 0 and 10, then uses
-this value to size the points.}
+\item{footnoteJust}{Value 0 - 1. 0 is left justified, 1 is right justified, 0.5 is centered. (Default = 1)}
 }
 \value{
-ggplot object
+ggplot object containing volcano plot
 }
 \description{
-A volcano plot shows Log Ratio data on the X axis and Negative Log Pvalues (NLP) on the Y axis.
-This function is intended to show the volcano plot from a dataframe
-created by topTable or topTreat.  Properly normalized data will generally be
+A volcano plot shows Log Ratio data on the X axis and Negative Log P-values (NLP) on the
+Y axis. This function is intended to show the volcano plot from a dataframe
+created by topTable or topTreat. Properly normalized data will generally be
 centered around LogRatio = 0.
 }
 \details{
 By default, the plot places "logFC" on the X axis and Log10 of the "P.Value" on the Y axis.
 By default, a reference vertical line is drawn at LogRatio = 0 on the X axis.
-Optionally, additional reference lines will be drawn at +/- a user supplied
-logratio threshold.
+Optionally, additional reference lines will be drawn at +/- a user supplied Log Ratio threshold.
 The points are color coded using both the significance and fold-change thresholds supplied by the user.
 By default, the P.Value field is used with a threshold of 0.01 to color code the points and fold-change
 threshold of +/- 1.5X.
-
 
 \strong{Data Structure for the input dataframe:}
 
 The defaults are set for dataframes produced by topTable and topTreat.  The columns named "logFC"
 and "P.Value" are used by default to accommodate the column
 names used in topTable/topTreat dataframes.  Any other dataframe
-can be used with foldchange, intensity and significance measures.  In this case you must use
-the appropriate arguments to define the column names to use. By default, the
-column names will be used for the axis labels.  You can overide the default xylabels
-the xlab and ylab arguments.
+can be used with fold-change, intensity, and significance measures, with appropriate
+arguments to define the column names to use provided. By default, the
+column names will be used for the axis labels, but can be overridden with xlab and ylab arguments.
 
 A significance measure (which defaults to P.Value <= 0.01) and LogRatio
-threshold are used to color code genes that
-are significantly increased or decreased.
-Use the appropriate arguments to use an FDR measure instead of pvalue.
+threshold are used to color code genes that are significantly increased or decreased.
+Use the appropriate arguments to use an FDR measure instead of p-value.
 
-Sensible defaults are chosen for symbols (Size, Shape, Color and Fill).  Optionally,
-there are arguments to allow you to fiddle with these settings.  A length of 3 is
+Sensible defaults are chosen for symbols (Size, Shape, Color, and Fill), but they can be
+adjusted through the use of optional arguments. A length of 3 is
 required for these arguments which applies the attributes in this order:
 Increased, NoChange, Decreased.
 }
 \examples{
-   Simple plot with custom title(df is a topTable dataframe)
+\dontrun{
+   # Simple plot with custom title (df is a topTable dataframe)
+   myPlot <- volcanoPlot(df, title = "Plot Title")
 
-   MyPlot = volcanoPlot(df, title = "Plot Title")
-
-   Some options with a custom datafile
-
-   MyPlot = volcanoPlot (df, pthreshold = 0.1,
-     logRatioCol = "Log2ratio",
-     logIntCol = "AverageIntensity",
-     pvalCol = "BHFDR",
-     xlab = "Log2 Ratio", ylab = "Log10 BHFDR",
-     title = "Profile Plot Title",
-     referenceLine = "blue",
-     legendPosition="ne")
+   # Some options with a custom datafile
+   myPlot <- volcanoPlot(df,
+                         pthreshold = 0.1,
+                         logRatioCol = "Log2ratio",
+                         logIntCol = "AverageIntensity",
+                         pvalCol = "BHFDR",
+                         xlab = "Log2 Ratio", ylab = "Log10 BHFDR",
+                         title = "Profile Plot Title",
+                         referenceLine = "blue",
+                         legendPosition = "ne")
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{compare}
-\keyword{ggplot2}
-\keyword{logratio}
-\keyword{plot}
-\keyword{scatterplot}

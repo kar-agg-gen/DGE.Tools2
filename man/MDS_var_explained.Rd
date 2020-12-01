@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggplotMDS.R
 \name{MDS_var_explained}
 \alias{MDS_var_explained}
-\title{Function MDS_var_explained}
+\title{Explain variance of MDS object or log2 matrix}
 \usage{
 MDS_var_explained(
   mds,
@@ -16,7 +16,7 @@ MDS_var_explained(
 )
 }
 \arguments{
-\item{mds}{A class MDS object from limma::plotMDS or a data matrix to analyze
+\item{mds}{A class MDS object from limma::plotMDS() or a data matrix to analyze
 (typically log2) (required)}
 
 \item{topN}{The number of dimensions to plot (Default = 10)}
@@ -27,38 +27,31 @@ MDS_var_explained(
 
 \item{barFill}{Default = "dodgerblue3"}
 
-\item{barWidth}{range 0-1. (Default = 0.65)}
+\item{barWidth}{Range 0-1. (Default = 0.65)}
 
 \item{barSize}{Thickness of the fill border (Default = 0.1)}
 
-\item{baseFontSize}{Base fontsize for the plot (Default = 14)}
+\item{baseFontSize}{Base font size for the plot (Default = 14)}
 }
 \value{
 A list with two ggplots and the variance explained data.frame.
 }
 \description{
-Takes a class MDS object from limma::plotMDS and generates two plots: 1)
+Takes a class MDS object from limma::plotMDS() and generates two plots: 1)
 fraction of variance for each dimension, 2) cumulative variance. By default,
-it plots the first 10 dimensions or the first N dimensions totaling 90%. See
-topN and cumVarLimit arguments to change the defaults.
+it plots the first 10 dimensions or the first N dimensions totaling 90%.
 }
 \examples{
-
-     #Plot the first two dimensions
-     MyMDS = ggplotMDS (MyDGEList)
+\dontrun{
+     # Plot the first two dimensions
+     MyMDS <- ggplotMDS(MyDGEList)
      MyMDS[[1]]  #the MDS plot
 
-     #Then apply MDS_var_explained (the MDS object is MyMDS[[2]])
+     # Then apply MDS_var_explained (the MDS object is MyMDS[[2]])
      varResults <- MDS_var_explained(MyMDS[[2]])
-     varResults[[1]] #the Variance per dimension plot
-     varResults[[2]] #the cumulative variance plot
-     var_explained <- varResults[[3]]  #data used for plotting (unfiltered)
+     varResults[[1]] # The Variance per dimension plot
+     varResults[[2]] # The cumulative variance plot
+     var_explained <- varResults[[3]]  # Data used for plotting (unfiltered)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGE,}
-\keyword{MDS,}
-\keyword{QC}
-\keyword{RNA-Seq,}

@@ -20,27 +20,27 @@ printAndSave(
 )
 }
 \arguments{
-\item{plotObject}{A ggplot2 plotobject}
+\item{plotObject}{A ggplot2 plot object}
 
-\item{filename}{A path/filename for the graphic}
+\item{filename}{A path/file name for the graphic}
 
-\item{width}{Graphic width in inches (default = 7)}
+\item{width}{Graphic width in inches (Default = 7)}
 
-\item{height}{Graphic height in inches (default = 5)}
+\item{height}{Graphic height in inches (Default = 5)}
 
 \item{units}{Units for height and width ("in"|"cm"|"mm") (Default = "in")}
 
-\item{res}{Resolution in ppi (default=300)}
+\item{res}{Resolution in PPI (Default = 300)}
 
 \item{scale}{Multiplicative scaling factor (Default = 1)}
 
-\item{printFontSize}{Base font size for the graphic on the console/knitr (default=12)}
+\item{printFontSize}{Base font size for the graphic on the console/knitr (Default = 12)}
 
-\item{saveFontSize}{Base font size for the graphic file (default=24)}
+\item{saveFontSize}{Base font size for the graphic file (Default = 24)}
 
 \item{scaleLegend}{Scale the legend smaller if font > 14  (Default = TRUE)}
 
-\item{printPlot}{Print to console if TRUE (Default=TRUE)}
+\item{printPlot}{Print to console if TRUE (Default = TRUE)}
 
 \item{savePlot}{Print to file if TRUE (Default = TRUE)}
 }
@@ -49,29 +49,29 @@ The print object
 }
 \description{
 printAndSave is a wrapper around ggsave.  It prints a ggplot2 object to the
-console/knitr report and saves as a graphic file. It defaults to larger fonts
-for the graphic file (more suitable for PPT).  Graphic filetype is taken
-from the given filename and can be one of (png, bmp, tiff, jpg, pdf, svg).
+console or a knitr report and saves as it a graphic file. By default it uses larger fonts
+for the graphic file (more suitable for PPT).  Graphic file type is taken
+from the given filename and can be one of: png, bmp, tiff, jpg, pdf, or svg.
 }
 \details{
-I found I didn't like the default Legend sizes. I inserted code to increase the
-size of the print/knitr legend and decrease the size of the legend in the saved
+The function increases the size of the print/knitr legend and
+decreases the size of the legend in the saved
 graphic file.  This works well for images of about 5-7 inches but may not scale
 well to other image sizes.  Set scaleLegend to FALSE to get the default behavior
 back or use legend.key.size in a theme to tweak to your own specifications.
 }
 \examples{
-printAndSave (Myggplot, "myfile.png") #all defaults
-printAndSave (Myggplot, "myfile.png", width=5, height=4, res=150, printFontSize=10,
-               saveFontSize=18)  #set a few options
+\dontrun{
+   # All defaults
+   printAndSave(Myggplot, "myfile.png")
+   # Set a few options
+   printAndSave(Myggplot,
+                "myfile.png",
+                width = 5,
+                height = 4,
+                res = 150,
+                printFontSize = 10,
+                saveFontSize = 18)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{bmp,}
-\keyword{ggplot2,}
-\keyword{jpeg,}
-\keyword{pdf}
-\keyword{png,}
-\keyword{tiff,}

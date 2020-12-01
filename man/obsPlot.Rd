@@ -26,7 +26,7 @@ obsPlot(
   boxNotchWidth = 0.8,
   violinColor = "grey30",
   violinFill = "goldenrod1",
-  ViolinAlpha = 0.5,
+  violinAlpha = 0.5,
   pointColor = "grey30",
   pointFill = "dodgerblue4",
   pointShape = 21,
@@ -38,25 +38,23 @@ obsPlot(
   meanShape = 22,
   meanAlpha = 0.7,
   meanSize = 3,
-  legenPosition = "right",
   baseFontSize = 12,
   themeStyle = "grey",
   facet = TRUE,
   facetCol = NULL,
   xAngle = 30,
   scales = "free_y",
-  returnPlotDat = FALSE,
-  debug = FALSE
+  returnPlotDat = FALSE
 )
 }
 \arguments{
-\item{data}{matrix or dataframe of whatever data you want to plot with
+\item{data}{Matrix or dataframe of whatever data you want to plot with
 samples in columns and observations (genes) in rows (with rownames and colnames).  Bug: Currently requires at least 2 rows of data.}
 
 \item{block}{Character or numeric vector. Determines which samples belong to the same group.  Must be same
 length as ncol(data).  Assign the same value to each member of a group.
 Note that the block values are used to label the X Axis to identify the
-groups.  Thus short pneumonic labels are useful here.}
+groups.  Thus short mnemonic labels are useful here.}
 
 \item{blockOrder}{Character vector. Use this to explicitly set the display order of the blocks
 in the plots.  blockOrder should contain unique(block) in the order you
@@ -70,15 +68,15 @@ colnames. (Default = NULL)}
 
 \item{plotBy}{Name for the type of observation being plotted (Default = "Gene")}
 
-\item{valType}{name for the Value being plotted.  (Default = "Log2CPM")}
+\item{valType}{Name for the Value being plotted.  (Default = "Log2CPM")}
 
 \item{boxLayer}{Adds a boxplot layer (Default = TRUE)}
 
 \item{violinLayer}{Adds a violin layer (Default = FALSE)}
 
-\item{pointLayer}{Adds a point layer (Default = True)}
+\item{pointLayer}{Adds a point layer (Default = TRUE)}
 
-\item{meanLayer}{Adds a mean layer (Default = True)}
+\item{meanLayer}{Adds a mean layer (Default = TRUE)}
 
 \item{xlab}{X axis label (defaults to "Block")}
 
@@ -92,13 +90,15 @@ colnames. (Default = NULL)}
 
 \item{boxAlpha}{Transparency for the box layer (Default = 0.5)}
 
-\item{boxNotch}{turn on/off confidence interval notches on boxplots (Default = FALSE)}
+\item{boxNotch}{Turn on/off confidence interval notches on boxplots (Default = FALSE)}
 
-\item{boxNotchWidth}{Set the width of boxnotches (0-1) (Default = 0.8)}
+\item{boxNotchWidth}{Set the width of box notches (0-1) (Default = 0.8)}
 
 \item{violinColor}{Color for the violin layer (Default = "grey30")}
 
-\item{violinFill}{Fill Color for the violin (Default = "yellow")}
+\item{violinFill}{Fill Color for the violin layer (Default = "yellow")}
+
+\item{violinAlpha}{Alpha value for the violin layer (Default = 0.5)}
 
 \item{pointColor}{Color for the point layer (Default = "grey30")}
 
@@ -111,7 +111,7 @@ colnames. (Default = NULL)}
 \item{pointSize}{Size of the points (Default = 4)}
 
 \item{pointJitter}{Amount to jitter the points (Default = 0) Try 0.2 if you
-have alot of points.}
+have a lot of points.}
 
 \item{meanColor}{Color for the mean layer (Default = "red2")}
 
@@ -132,34 +132,30 @@ respectively. Default = bw"}
 \item{facet}{Specifies whether to facet (TRUE) or print individual plots
 (FALSE)  (Default = TRUE)}
 
-\item{xAngle}{Angle to set the sample labels on the Xaxis. (Default =  30; Range = 0-90)}
+\item{facetCol}{If facet = TRUE, used to specify a number of columns of faceted graphs.
+(Default = NULL)}
+
+\item{xAngle}{Angle to set the sample labels on the X axis. (Default =  30; Range = 0-90)}
 
 \item{scales}{Specify same scales or independent scales for each subplot (Default = "free_y";
 Allowed values: "fixed", "free_x", "free_y", "free")}
 
-\item{returnPlotDat}{Returns the dataframe used for the plot as a list member (default=FALSE)}
-
-\item{debug}{Used to open a breakpoint just before the melt step (default=FALSE)}
-
-\item{violinAlpha}{Transparency for the box layer (Default = 0.5)}
-
-\item{facetRow}{Explicitly set the number of Rows for the facet plot.
-Default behavior will automatically set the columns. (Default = NULL)}
+\item{returnPlotDat}{Returns the dataframe used for the plot as a list member (Default = FALSE)}
 }
 \value{
-ggplot If Facet=TRUE (default) returns a facetted ggplot object. If
-  facet=FALSE or returnPlotDat=TRUE, returns a list of ggplot objects indexed
-  by observation (gene) names. If returnPlotDat=TRUE, the last element
+ggplot object. If Facet = TRUE (default) returns a faceted ggplot object. If
+  facet = FALSE or returnPlotDat = TRUE, returns a list of ggplot objects indexed
+  by observation (gene) names. If returnPlotDat = TRUE, the last element
   of the list is the dataframe used to generate the plot.
 }
 \description{
 Provides a summary plot for each observation (gene), showing data for each
 experiment group. The plot can optionally include one or more of the
-following layers: boxplot, violin plot, individual points and/or mean of all
+following layers: boxplot, violin plot, individual points, and/or mean of all
 points.  The layers are built up in the order listed with user settable
-transparency, colors etc.  By default, the Boxplot, Point and Mean layers are
-active. Also, by default, the plots are faceted.  Facet plot can be turned
-off to return a list of individual ggplot graphics for each gene.
+transparency, colors etc.  By default, the Boxplot, Point, and Mean layers are
+active. Also, by default, the plots are faceted.  Faceted plot can be turned
+off to return a list of individual ggplot2 graphics for each gene.
 }
 \details{
 Input is a dataframe or matrix of observations (rows; usually genes) by
@@ -170,28 +166,21 @@ each observation (gene).
 
 Rownames are required and all the data columns should be numeric.  Each
 observation (gene) generates a separate plot, so you should pass a smallish
-list of genes unless you want alot of output.  By default the plot is
+list of genes unless you want a lot of output.  By default the plot is
 faceted. You should turn facet off if you have more than ~25 genes to plot.
 Colnames and Rownames will be used to label the plots by default but custom
 col/row names can also be supplied as separate vectors.
 }
 \examples{
-   Simple faceted plot with custom title
-
-   #get Log2CPM from an DGEobj object
-   dgeObj = readRDS("MyDGEobj.RDS")
-   dgelist <- getItem(dgeObj, "DGEList")
-   Log2CPM <- cpm(dgelist, log=TRUE)
-   genes = Log2CPM[1:12,] #first dozen genes
-   #define six treatment groups in triplicate
-   MyBlock = c(1,1,1,2,2,2,3,3,3,4,4,4,5,5,5,6,6,6)
-   MyPlot = obsPlot(genes, MyBlock, title = "Plot Title")
+\dontrun{
+   # Simple faceted plot with custom title
+   # Get Log2CPM from a DGEobj object
+   dgelist <- getItem(DGEobj, "DGEList")
+   Log2CPM <- edgeR::cpm(dgelist, log = TRUE)
+   genes <- Log2CPM[1:12,] #first dozen genes
+   # Define six treatment groups in triplicate
+   MyBlock <- c(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6)
+   MyPlot <- obsPlot(genes, MyBlock, title = "Plot Title")
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{boxplot}
-\keyword{ggplot2}
-\keyword{logratio}
-\keyword{violinplot}

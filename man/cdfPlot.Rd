@@ -2,12 +2,12 @@
 % Please edit documentation in R/cdfPlot.R
 \name{cdfPlot}
 \alias{cdfPlot}
-\title{Deluxe CDF Plots}
+\title{Create deluxe CDF Plots}
 \usage{
 cdfPlot(
   df,
   pvalCol = "P.Value",
-  pthreshold = 0.01,
+  pThreshold = 0.01,
   xlab = NULL,
   ylab = NULL,
   title = NULL,
@@ -35,91 +35,98 @@ cdfPlot(
 )
 }
 \arguments{
-\item{df}{A dataframe with LogRatio and LogIntensity columns and optionally a pvalue or FDR column.}
+\item{df}{A dataframe with LogRatio and LogIntensity columns and optionally a p-value or FDR column.}
 
-\item{pvalCol}{name of the pvalue or FDR column (Default = "P.Value")}
+\item{pvalCol}{Name of the p-value or FDR column (Default = "P.Value")}
 
-\item{pthreshold}{Used to color points (default = 0.01)}
+\item{pThreshold}{Used to color points (default = 0.01)}
 
-\item{xlab}{X axis label (default is "LogIntensity column name"Rank")}
+\item{xlab}{X axis label (default is "LogIntensity column name "Rank")}
 
-\item{ylab}{Y axis label (default is Pvalue column name)}
+\item{ylab}{Y axis label (default is p-value column name)}
 
-\item{title}{Plot title (optional)}
+\item{title}{Plot title (Optional)}
 
 \item{insetTitle}{Title for the inset plot (Optional)}
 
-\item{symbolSize}{Size of symbols for Up, no change and Down. default = c(4, 1, 4);
-Note: you cannot choose the exact same size for all three.  But you can use decimal
-values.}
+\item{symbolSize}{Size of symbols for up, no change, and down. Default = c(4, 1, 4);
+Note: All three cannot be the same size. Decimal values are acceptable to help offset that
+(e.g. 4, 4.1, 4.2).}
 
-\item{symbolShape}{Shape of the symbols for Up, no change and Down; Default = c(21, 20, 21)
-(20 = filled circle, 21 = fillable open circle); Note: you cannot choose the same
-symbol shape for all three.
+\item{symbolShape}{Shape of the symbols for up, no change, and down; Default = c(21, 20, 21)
+(20 = filled circle, 21 = fillable open circle); Note: The same symbol shape cannot
+be selected for all three symbols.
 See \url{http://www.cookbook-r.com/Graphs/Shapes_and_line_types}}
 
 \item{symbolColor}{c(Up, NoChange, Down); default = c("black", "grey25", "grey0")
 See \url{http://research.stowers-institute.org/efg/R/Color/Chart}
-Note: You cannot duplicate colors.}
+Note: Colors cannot be duplicated.}
 
 \item{symbolFill}{Set the fill color for the symbols. Note only symbols 21-25 are fillable.
 This will have no effect on other symbols.
 Default = c("red3", "grey25", "deepskyblue4")
-Note: You cannot duplicate colors.}
+Note: Colors cannot be duplicated.}
 
-\item{alpha}{Controls the transparency of the plotted points (0-1; default =
+\item{alpha}{Controls the transparency of the plotted points (0-1; Default =
 0.5)}
 
-\item{referenceLine}{Color for an horizontal line drawn at the pthreshold
+\item{referenceLine}{Color for an horizontal line drawn at the p-threshold
 (Default = NULL; NULL disables, set to desired color to enable)}
 
-\item{refLineThickness}{Set thicknesss of the reference line (Default=1)}
+\item{refLineThickness}{Set thickness of the reference line (Default = 1)}
+
+\item{legendPosition}{(Default = "se")}
 
 \item{baseFontSize}{The smallest size font in the figure in points. (Default
 = 12)}
 
+\item{viewportX}{(Default = 0.15)}
+
+\item{viewportY}{(Default = 0.93)}
+
+\item{viewportWidth}{(Default = 0.35)}
+
 \item{themeStyle}{"bw" or "grey" which correspond to theme_bw or theme_grey
-respectively. Default = "grey"}
+respectively. (Default = "grey")}
 
 \item{pvalMax}{Limit the range of the main plot (Default = 0.10)}
 
 \item{printPlot}{Specify printing the combined plot to the console/knitr
 (Default = TRUE)}
 
-\item{plotFile}{Provide a filename with .PNG extension to save the an image
+\item{plotFile}{Provide a file name with .PNG extension to save the an image
 file. Font size doubled for PNG file output.}
 
-\item{footnote}{optional string placed right justified at bottom of plot.}
+\item{footnote}{Optional string placed right justified at bottom of plot.}
 
-\item{footnoteSize}{applies to footnote. (default = 3)}
+\item{footnoteSize}{Applies to footnote. (Default = 3)}
 
-\item{footnoteColor}{applies to footnote. (default = "black")}
+\item{footnoteColor}{Applies to footnote. (Default = "black")}
 
-\item{footnoteJust}{Value 0-1. 0 is left justified, 1 is right justified, 0.5 is centered. (default=1)}
+\item{footnoteJust}{Value 0 - 1. 0 is left justified, 1 is right justified, 0.5 is centered. (Default = 1)}
 }
 \value{
-A list containing mainplot, insetplot and viewport. You can then
-  reconstruct the plot with: print(MyList$main); print(inset,
-  vp=Mylist$viewport)
+A list containing main plot, inset plot, and viewport. The plot can be
+   reconstructed with print(myList$main); print(inset, vp = myList$viewport)
 }
 \description{
-CDF plots are a good complement to pvalue histograms as a way to evaluate
+CDF plots are a good complement to p-value histograms as a way to evaluate
 model performance and examine support for differential expression. Results
-are ranked by pvalue on the x-axis and the pvalue plotted on the y-axis.
-Since pvalue distributions should be flat, this type of plot should produce a
+are ranked by p-value on the x-axis and the p-value plotted on the y-axis.
+Since p-value distributions should be flat, this type of plot should produce a
 straight line.  Any observations that fail to meet the null hypothesis will
 appear as a break in the line at the low end of the curve.
 }
 \details{
 This function is designed to take topTable dataframes and display the
-corresponding CDF plot. Data for the pvalues below 0.1 (user settable via
+corresponding CDF plot. Data for the p-values below 0.1 (configurable via
 pvalMax argument) are show in a full size plot. An inset figure shows the
-whole pvalue scale and highlights the portion shown in the full plot.  Points
-below 0.01 are a different color by default (threshold set by pthreshold
-argument; shape/color attributes customizable through arguments).
+whole p-value scale and highlights the portion shown in the full plot. Points
+below 0.01 are a different color by default (threshold set by pThreshold
+argument; shape/color attributes customizable through other arguments).
 
 Two arguments control the output.  printPlot = TRUE outputs the compound plot
-to the console/knitr.  Provide a filename with a .PNG extension to save the
+to the console/knitr.  Provide a file name with a .PNG extension to save the
 compound plot to a PNG file.  Font sizes are increase 1.5 fold for the PNG
 file. The default baseFontSize = 12 produces suitable output for knitr PDFs
 and the 1.5 fold adjustment produces a PNG file suitable for PPT
@@ -130,24 +137,16 @@ presentations.
 The defaults are set for dataframes produced by topTable.  The column
 "P.Value" is used by default to accommodate the column names used in topTable
 dataframes.  Any other dataframe can be used with by explicitly defining the
-pvalue column name with the appropriate argument.
+p-value column name with the appropriate argument.
 
-Sensible defaults are chosen for symbols (Size, Shape, Color and Fill).
-Optionally, there are arguments to allow you to fiddle with these settings.
-A length of 2 is required for these arguments which applies the attributes in
+Sensible defaults are chosen for symbols (Size, Shape, Color, and Fill).
+There are optional arguments that allow these to be adjusted. A length of 2
+is required for these arguments which applies the attributes in
 this order: Significant, Not Significant.
 }
 \examples{
-   Plot to console and PNG file (df is a topTable dataframe)
-
+\dontrun{
+   # Plot to console and PNG file (df is a topTable dataframe)
    cdfPlot(df, title = "My CDF Plot", printFile = "MyCDFplot.PNG")
-
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
 }
-\keyword{compare}
-\keyword{ggplot2}
-\keyword{logratio}
-\keyword{plot}
-\keyword{scatterplot}

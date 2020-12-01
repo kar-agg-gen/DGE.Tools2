@@ -2,53 +2,46 @@
 % Please edit documentation in R/tidyIntensity.R
 \name{tidyIntensity}
 \alias{tidyIntensity}
-\title{Function  tidyIntensity}
+\title{Create a tidy intensity dataframe}
 \usage{
-tidyIntensity(x, rowidColname, keyColname, valueColname, group)
+tidyIntensity(intensityObj, rowIDcolname, keyColname, valueColname, group)
 }
 \arguments{
-\item{x}{A dataframe or matrix with rownames and colnames (required)}
+\item{intensityObj}{A dataframe or matrix with row names and col names. (Required)}
 
-\item{rowidColname}{Column name for the rowID (Usually a geneID column)
-If it doesn't exist, it will be created from rownames  (required)}
+\item{rowIDcolname}{Column name for the rowID (Usually a geneID column).
+If it doesn't exist, it will be created from row names. (Required)}
 
 \item{keyColname}{Defines the column name that will hold the sample names
-captured from the colnames of the input dataframe  (required)}
+captured from the col names of the input dataframe.  (Required)}
 
-\item{valueColname}{Defines the column name for the value column (intensity values)  (required)}
+\item{valueColname}{Defines the column name for the value column (intensity values). (Required)}
 
 \item{group}{A grouping variable to define which columns go together (vector
-with length = ncol(x) of the input dataframe).  This is typically the name
-of a column from the design table  (required)}
+with length = ncol(intensityObj) of the input dataframe).  This is typically the name
+of a column from the design table. (Required)}
 }
 \value{
 A tidy dataframe of intensity data.
 }
 \description{
-Takes dataframe or matrix of intensity values with geneid rownames and samplename columnnames and a grouping vector.
-Returns a tidy dataframe.
+This function takes a dataframe or matrix of intensity values with geneID row names
+and sample name column names, e.g. from log2cpm.  It uses tidyr::gather to produce a
+"tidy" dataframe.
 }
 \details{
-This function takes a genes x samples datafile of e.g. log2cpm.  It uses tidyr::gather to produce
-a "tidy" datafile.
-
-So the rowidColname defines the name you want the gene id column to have and will create the column from
-the rownames which are typically ensembl gene IDs.  If you add a gene symbol column to your intensity
-dataframe, you can specify the name of that column with the rowidColname argument and it will be used instead
-of the rownames.
+The rowIDcolname defines the name the resulting gene id column should have and will create the
+column from the row names, which are typically ensemble gene IDs. If a gene symbol column is
+already present in the intensity dataframe, it can be specified using rowIDcolname and will
+be used instead of the rownames.
 }
 \examples{
-
-  MyTidyIntensity  = tidyIntensity (MyLog2CPM,
-                                    rowidColname="GeneID",
-                                    keyColname="Sample"
-                                    valueColname="Log2CPM",
-                                    group=dgeObj$design$ReplicateGroup)
+\dontrun{
+  myTidyIntensity <- tidyIntensity(myLog2CPM,
+                                   rowIDcolname = "GeneID",
+                                   keyColname = "Sample"
+                                   valueColname = "Log2CPM",
+                                   group = dgeObj$design$ReplicateGroup)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{RNA-Seq;}
-\keyword{intensity;}
-\keyword{tidy}

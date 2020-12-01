@@ -18,27 +18,24 @@ dflist_to_excel(
 
 \item{filename}{Path/Filename for output (Required).}
 
-\item{widthFirstCol}{width of 1st column (rownames) (Default=40)}
+\item{widthFirstCol}{Width of 1st column (rownames) (Default = 40)}
 
-\item{widthOtherCol}{width of 1st column (rownames) (Default=10)}
+\item{widthOtherCol}{Width of 1st column (rownames) (Default = 10)}
 
-\item{baseFontSize}{base font for Excel file (Default=10)}
+\item{baseFontSize}{Base font for Excel file (Default = 10)}
 
-\item{useRownames}{default = TRUE; Set to false when no appropriate unique column present.}
+\item{useRownames}{Default = TRUE; Set to false when no appropriate unique column present.}
 }
 \value{
-Writes an Excel file to the specified file.
+Writes an Excel file to the specified filename.
 }
 \description{
 Take a named list of dataframes with rownames and output to an Excel spreadsheet.
-Freezes the row and colnames and sets columns into Excel filter mode.
+Freezes the row and colnames and sets the columns into Excel filter mode.
 }
 \examples{
-MyContrastTable  = topTable.merge (topTablelist)
+\dontrun{
+   MyContrastTable <- topTable.merge(topTablelist)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{Excel}
-\keyword{dataframe,}

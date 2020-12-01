@@ -2,11 +2,11 @@
 % Please edit documentation in R/plotPValHist.R
 \name{plotPvalHist}
 \alias{plotPvalHist}
-\title{Function  plotPvalHist}
+\title{Plot histogram analysis of p-value distributions}
 \usage{
 plotPvalHist(
   P.Val,
-  Facet = TRUE,
+  facet = TRUE,
   savePlot = FALSE,
   fileNames = NULL,
   binWidth = 0.02,
@@ -18,54 +18,49 @@ plotPvalHist(
 )
 }
 \arguments{
-\item{P.Val}{a matrix or dataframe of numeric data; col=samples}
+\item{P.Val}{A matrix or dataframe of numeric data; col = samples}
 
-\item{Facet}{Set to FALSE to print individual plots instead of a facetted plot. (Default = TRUE)}
+\item{facet}{Set to FALSE to print individual plots instead of a faceted plot. (Default = TRUE)}
 
-\item{savePlot}{TRUE saves the plot(s) to .PNG files}
+\item{savePlot}{TRUE saves the plot(s) to .PNG files.}
 
-\item{fileNames}{Pass a single filename for a facetted plot to save the
-plot to a file.  Pass a list of filenames if Facet=FALSE (length must equal
+\item{fileNames}{Pass a single file name for a faceted plot to save the
+plot to a file.  Pass a list of file names if facet = FALSE (length must equal
 sample count).}
 
-\item{binWidth}{Range is always 0-1 for pvalues. So this defaults to 0.02}
+\item{binWidth}{Range is always 0-1 for p-values. (Default = 0.02)}
 
-\item{baseFontSize}{Set the base font size for the plot using theme_grey (Default=12)}
+\item{baseFontSize}{Set the base font size for the plot using theme_grey. (Default = 12)}
 
-\item{facetFontSize}{control font size on the individual plot headers
-(default=NULL). Allows for fine tuning if the theme_grey default doesn't
-work for you. 10 seems good for knitr output (dependant on length of your
-sample titles); bigger (e.g. 14) works better for PPT.}
+\item{facetFontSize}{Control font size on the individual plot headers
+(default = NULL). 10 seems good for knitr output (dependent on length of
+sample titles). Bigger (e.g. 14) works better for PPT.}
 
 \item{alpha}{Set the transparency. (Default = 0.6)}
 
-\item{color}{Color for the histogram outline (default = "dodgerblue3")}
+\item{color}{Color for the histogram outline. (Default = "dodgerblue3")}
 
-\item{fill}{Fill color for the histogram (default = "dodgerblue3")}
+\item{fill}{Fill color for the histogram. (Default = "dodgerblue3")}
 }
 \value{
-A ggplot2 object if facet=TRUE or a list of plots if facet=FALSE. (Default = TRUE)
+A ggplot2 object if facet = TRUE or a list of plots if facet = FALSE. (Default = TRUE)
 }
 \description{
 Generate a facet plot (or optionally individual plots) from a dataframe of
-numbers.  Intended to perform histogram analysis of pvalue distributions.
-But should be useful for any dataframe of numeric columns.
+numbers.  Intended to perform histogram analysis of p-value distributions,
+but should be useful for any dataframe of numeric columns.
 }
 \examples{
+\dontrun{
+   # Print to console using all defaults
+   MyPvalMatrix <- extractCol(getType(myDGEobj, "topTable"), "P.Value")
+   plotPvalHist(MyPvalMatrix)
 
-#Print to console, all defaults
-MyPvalMatrix <- extractCol(getType(myDGEobj, "topTable"), "P.Value")
-plotPvalHist (MyPvalMatrix)
-
-#Print just to a PNG with some arguments
-myplot <- plotPvalHist (MyPValMatrix, savePlot = T, fileNames = "MyPlot.PNG",
-               facetFontSize= 14)
+   # Print to a PNG with some custom arguments
+   myplot <- plotPvalHist(MyPValMatrix,
+                          savePlot = TRUE,
+                          fileNames = "MyPlot.PNG",
+                          facetFontSize = 14)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{Entrez,}
-\keyword{GeneID}
-\keyword{gene}
-\keyword{symbol,}

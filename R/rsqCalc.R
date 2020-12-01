@@ -1,0 +1,33 @@
+#' Calculate R-squared for each gene fit
+#'
+#' Takes a Log2CPM numeric matrix and MArrayLM fit object from limma::lmFit
+#' and calculates R-squared for each gene fit.
+#'
+#' @param normMatrix A normalized log2cpm matrix.
+#' @param fit A MArrayLM object from limma::lmFit.
+#'
+#' @return A vector of R-squared values for each gene fit.
+#'
+#' @examples
+#' \dontrun{
+#'   rsq <- rsqCalc (log2cpm, fitObject)
+#' }
+#'
+#' @importFrom assertthat assert_that
+#' @importFrom Matrix rowSums
+#' @importFrom stringr str_c
+#'
+#' @export
+rsqCalc <- function(normMatrix, fit) {
+
+    assertthat::assert_that(any(c("data.frame", "matrix") %in% class(normMatrix)),
+                            msg = "normMatrix must be of class 'data.frame' or 'matrix'.")
+    assertthat::assert_that("MArrayLM" %in% class(fit),
+                            msg = "fit must be of class 'MArrayLM'.")
+    assertthat::assert_that(is.numeric(as.matrix(normMatrix)),
+                            msg = "All of the entries in normMatrix must be numeric.")
+
+    sst <- Matrix::rowSums(normMatrix^2)
+    ssr <- sst - fit$df.residual*fit$sigma^2
+    return(ssr)
+}

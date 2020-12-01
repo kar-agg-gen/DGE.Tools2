@@ -2,41 +2,29 @@
 % Please edit documentation in R/convertCounts.R
 \name{tpm.on.subset}
 \alias{tpm.on.subset}
-\title{Function tpm.on.subset}
+\title{Calculate TPM for a subsetted DGEobj}
 \usage{
-tpm.on.subset(dgeo, applyFilter = TRUE)
+tpm.on.subset(dgeObj, applyFilter = TRUE)
 }
 \arguments{
-\item{dgeo}{A DGEobj data structure}
+\item{dgeObj}{A DGEobj data structure}
 
-\item{applyFilter}{If TRUE, reduces to the filtered gene list. FALSE returns
-all genes in the raw data. [Default = TRUE]}
+\item{applyFilter}{Default = TRUE. If TRUE, reduces to the filtered gene list. FALSE returns
+all genes in the raw data.}
 }
 \value{
 A matrix in the new unit space
 }
 \description{
-Use this to calculate TPM for a heavily subsetted DGEobj.  It calculates TPM
+Calculates TPM for a heavily subsetted DGEobj. The function will calculate TPM
 using the original data but returns a DGEobj with the subset.
 }
 \details{
-Takes a DGEObj as input. Uses all data (pre-genefiltering; counts_orig) to
-calculate TPM values. Then optionally filters any genes that were already
-filtered out.
-
-For GeneLength in the calculation, it takes geneData$ExonLength (for Omicsoft data)
-or uses rowMeans(effectiveLength) for data derived from Xpress.
-
-Internally it uses edgeR::fpkm to calculate fpkm and converts to tpm
-using the formula provided  by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
+Internally, convertCounts uses edgeR::fpkm() to calculate FPKM and converts to TPM
+using the formula provided by [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 }
 \examples{
-myTPM <- tpm(dgeobj)
-
+\dontrun{
+   myTPM <- tpm(DGEobj)
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
 }
-\keyword{RNA-Seq,}
-\keyword{conversion}
-\keyword{unit}

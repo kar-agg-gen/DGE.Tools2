@@ -2,11 +2,11 @@
 % Please edit documentation in R/comparePlot.R
 \name{comparePlot}
 \alias{comparePlot}
-\title{Function ComparePlot}
+\title{Create formatted scatterplot of first two cols of df}
 \usage{
 comparePlot(
   df,
-  pthreshold = 0.01,
+  pThreshold = 0.01,
   xlab = NULL,
   ylab = NULL,
   title = NULL,
@@ -32,15 +32,15 @@ comparePlot(
 }
 \arguments{
 \item{df}{A dataframe with the first two columns representing the x and y variables.
-Optionally add xp and yp columns to hold pvalues or FDR values.}
+Optionally add xp and yp columns to hold p-values or FDR values.}
 
-\item{pthreshold}{Used to color points (default = 0.01)}
+\item{pThreshold}{Used to color points (Default = 0.01)}
 
-\item{xlab}{X axis label (default to first column name)}
+\item{xlab}{X-axis label (Default to first column name)}
 
-\item{ylab}{Y axis label (default to second column name)}
+\item{ylab}{Y-axis label (Default to second column name)}
 
-\item{title}{Plot title (optional)}
+\item{title}{Plot title (Optional)}
 
 \item{symbolSize}{Size of symbols; default = c(4, 4, 4, 2)}
 
@@ -53,14 +53,13 @@ default = c("black", "grey0", "grey1", "grey25")}
 \item{symbolFill}{Set the fill color for the symbols. Note only symbols 21-25 are fillable. This will
 have no effect on other symbols. Default = c("darkgoldenrod1", "deepskyblue4", "red3", "grey25")}
 
-\item{alpha}{Controls the transparency of the plotted points (0-1; default = 0.5)}
+\item{alpha}{Controls the transparency of the plotted points (0-1; Default = 0.5)}
 
-\item{rugColor}{Specify color for rug density plot along xy axes. Set to NULL
-to disable rug layer. (Default=NULL)}
+\item{rugColor}{Specify color for rug density plot along X and Y axes. Set to NULL
+to disable rug layer. (Default = NULL)}
 
-\item{rugAlpha}{Sets the transparency for the rug layer.  An alpha <1.0 takes
-a long time to draw (~10 min on 32bit Win7).  So I set the default at 1.0,
-but for a final plot try 0.1 or 0.2 for alpha for more informative rug.}
+\item{rugAlpha}{Sets the transparency for the rug layer. alpha <1.0 takes
+a long time to draw, so for a final plot try 0.1 or 0.2 for alpha for more informative rug.}
 
 \item{crosshair}{Color for the crosshair; (Default = "grey50", NULL disables)
 See \url{http://research.stowers-institute.org/efg/R/Color/Chart}}
@@ -68,10 +67,10 @@ See \url{http://research.stowers-institute.org/efg/R/Color/Chart}}
 \item{referenceLine}{Color for a slope=1, intercept=0 reference line
 (Default = "darkgoldenrod1"; NULL disables)}
 
-\item{refLineThickness}{Set thickness for crosshair and referenceLine (Default=1)}
+\item{refLineThickness}{Set thickness for crosshair and referenceLine (Default = 1)}
 
 \item{dens2D}{Overlay a density2D layer (Default = TRUE) Note: only applies
-to simple compare plot without pvalue coloring.}
+to simple compare plot without p-value coloring.}
 
 \item{legendPosition}{One of "top", "bottom", "left", "right", "ne", "se", "nw", "sw", NULL.
 top/bottom/left/right place the legend outside the figure.  ne/se/nw/sw place the figure
@@ -80,90 +79,82 @@ inside the figure. NULL disables the legend. Default = "right"}
 \item{baseFontSize}{The smallest size font in the figure in points. Default = 12}
 
 \item{themeStyle}{"bw" or "grey" which corresponds to theme_bw or theme_grey respectively.
-Default = bw"}
+Default = "bw"}
 
-\item{footnote}{optional string placed right justified at bottom of plot.}
+\item{footnote}{Optional string placed right justified at bottom of plot.}
 
-\item{footnoteSize}{applies to footnote. (default = 3)}
+\item{footnoteSize}{Applies to footnote. (Default = 3)}
 
-\item{footnoteColor}{applies to footnote. (default = "black")}
+\item{footnoteColor}{Applies to footnote. (Default = "black")}
 
-\item{footnoteJust}{Value 0-1. 0 is left justified, 1 is right justified, 0.5 is centered. (default=1)}
+\item{footnoteJust}{Value 0-1. 0 is left justified, 1 is right justified, 0.5 is centered. (Default = 1)}
 }
 \value{
 ggplot object
 }
 \description{
-In the simpliest form it draws a nicely formatted scatterplot of the
+Creates a nicely formatted scatterplot of the
 first two columns in a dataframe.  Several formatting options are
-available to enhance the plots.  If you supply pvalues or FDR values and a threshold,
-the plot is color coded to show X unique, Y Unique and
-Common differentialy expressed (DE) genes in different colors.
+available to enhance the plots.  If p-values or FDR values and a threshold are supplied,
+the plot is color coded to show X unique, Y unique, and
+common differentially expressed (DE) genes in different colors.
 }
 \details{
-Other options add
-an identity line (slope=1, intercept=0) and/or a crosshair at (0,0).
+Other options add an identity line (slope = 1, intercept = 0) and/or a crosshair at (0, 0).
 
-The comparePlot has also been implemented
-with a scalable theme that makes it easy to scale font sizes larger
-or smaller for PPT or Knitr output.  Just add either theme_grey(n) or theme_bw(n),
-where n equals the base font size (12 works well for knitr, 18 or 24 works well
-for PPT).  e.g. MyPlot + theme_grey(18).  However, theme_gray and theme_bw have the
-side effect of resetting the legend position.  Thus, do not use those standard themes
-if you want to preserve the custom legend locations.  You must rely on the baseFontSize
-argument in this function to set font sizes to preserve a custom legend location.
+comparePlot has also been implemented with a scalable theme that makes it easy to scale font sizes larger
+or smaller for PPT or knitr output.  Add either theme_grey(n) or theme_bw(n),
+where n equals the base font size to adjust the text size (12 works well for knitr, 18 or 24 works well
+for PPT), e.g. MyPlot + theme_grey(18).  However, theme_grey() and theme_bw() have the
+side effect of resetting the legend position, and should not be used if the custom legend locations
+need to be preserved. Instead, utilize the baseFontSize
+argument in this function to set font sizes and preserve a custom legend location.
 
 \strong{Data Structure for the input dataframe:}
 
 The x and y values should be in the first two columns. By default, their
-column names will be used for the axis labels.  You can overide the xylabels
-the xlab and ylab arguments.
+column names will be used for the axis labels. The x and y labels can be changed
+using the xlab and ylab arguments.
 
-Optionally, significance measures in the form of pvalues or FDR values can be supplied
-for X and Y respectively.  If provided, these columns \strong{must} be named "xp" and "yp" respectively.
+Optionally, significance measures in the form of p-values or FDR values can be supplied
+for X and Y respectively. If provided, these columns \strong{must} be named "xp" and "yp" respectively.
 Together with a threshold (which defaults to 0.01), these values will
-be used to color code the plot to show X Unique, Y Unique and Common DE
-genes.  You can use either pvalues or FDR values for the signficance columns.  Use the
-pthreshold argument to set a proper threshold for FDR values.
+be used to color code the plot to show X Unique, Y Unique, and Common DE
+genes.  Use either p-values or FDR values for the significance columns. Use the
+pThreshold argument to set a proper threshold for FDR values.
 
-Sensible defaults are chosen for symbols (Size, Shape, Color and Fill).  Optionally,
-there are arguments to allow you to fiddle with these settings.  A length of 4 is
+Sensible defaults are chosen for symbols (Size, Shape, Color and Fill), but optional
+arguments allow much about the symbols to be customized. A length of 4 is
 required for these arguments which applies the attributes in this order:
-Common, X Unique, Y Unique and Not Significant.
+Common, X Unique, Y Unique, and Not Significant.
 
-Note if you're not using pvalues or FDR values to color the plot, the X Unique color
+Note: if p-values or FDR values are not used to color the plot, the X Unique color
 values are used.
 }
 \examples{
+\dontrun{
+  # Retrieve the first two contrasts from a DGEobj as a list of dataframes (length = 2; named items)
+  ttList <- getType(DGEobj, "topTable")[1:2]
 
-  #Retrieve the 1st two contrasts from a DGEobj as a list of dataframes (length=2; named items)
-  ttList <- getType(dgeObj, "topTable")[1:2]
-
-  #capture the default logFC and P.Value
+  # Capture the default logFC and P.Value
   compareDat <- comparePrep(ttList)
 
-  #switch to an FDR value for the significance measure
-  compareDat <- comparePrep(ttList, significanceCol="adj.P.Val")
+  # Switch to an FDR value for the significance measure
+  compareDat <- comparePrep(ttList, significanceCol = "adj.P.Val")
 
-  #draw the plot
+  # Draw the plot
   cPlot <- comparePlot(compareDat, title = "Plot Title")
   print(cPlot)
 
-   Deluxe Plot with bells and whistles.
-
-   MyPlot = comparePlot (df, pthreshold = 0.5,
-     xlab = "x Axis Label", ylab = "y Axis Label",
-     title = "Plot Title",
-     crosshair = "red",
-     referenceLine = "blue",
-     legendPosition="nw")
+  # Deluxe Plot with bells and whistles.
+  myPlot <- comparePlot(df,
+                        pThreshold = 0.5,
+                        xlab = "x Axis Label",
+                        ylab = "y Axis Label"
+                        title = "Plot Title",
+                        crosshair = "red",
+                        referenceLine = "blue",
+                        legendPosition = "nw")
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{compare}
-\keyword{ggplot2}
-\keyword{logratio}
-\keyword{plot}
-\keyword{scatterplot}

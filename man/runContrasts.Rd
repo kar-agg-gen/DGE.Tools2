@@ -2,7 +2,7 @@
 % Please edit documentation in R/runContrasts.R
 \name{runContrasts}
 \alias{runContrasts}
-\title{Function  runContrasts}
+\title{Calculate contrast fits and contrast matrix}
 \usage{
 runContrasts(
   dgeObj,
@@ -11,63 +11,63 @@ runContrasts(
   contrastSetName = fitName,
   runTopTable = TRUE,
   runTopTreat = FALSE,
-  FoldChangeThreshold = 1.5,
-  PvalueThreshold = 0.01,
+  foldChangeThreshold = 1.5,
+  pValueThreshold = 0.01,
   FDRthreshold = 0.1,
   runEBayes = TRUE,
   robust = TRUE,
   proportion = 0.01,
-  Qvalue = FALSE,
+  qValue = FALSE,
   IHW = FALSE,
   verbose = FALSE
 )
 }
 \arguments{
-\item{dgeObj}{A DGEobj object containing a Fit object and design matrix (required)}
+\item{dgeObj}{A DGEobj object containing a Fit object and design matrix. (Required)}
 
 \item{designMatrixName}{The name of the design matrix within dgeObj to use for
-contrast analysis  (required)}
+contrast analysis. (Required)}
 
-\item{contrastList}{A named list of contrasts  (required)}
+\item{contrastList}{A named list of contrasts. (Required)}
 
 \item{contrastSetName}{Name for the set of contrasts specified in contrastList.  Defaults
-to "fitName_cf".  Change only if you need to create 2 or more contrast sets from the same fit.}
+to "fitName_cf".,Should only be changed to create 2 or more contrast sets from the same fit.}
 
-\item{runTopTable}{runs topTable on the specified contrasts (Default = TRUE)}
+\item{runTopTable}{Runs topTable on the specified contrasts. (Default = TRUE)}
 
-\item{runTopTreat}{runs topTreat on the specified contrasts (Default = FALSE)}
+\item{runTopTreat}{Runs topTreat on the specified contrasts.
+]== (Default = FALSE)}
 
-\item{FoldChangeThreshold}{Only applies to TopTreat (Default = 1.5)}
+\item{foldChangeThreshold}{Only applies to topTreat (Default = 1.5)}
 
-\item{PvalueThreshold}{Default = 0.01}
+\item{pValueThreshold}{Default = 0.01}
 
 \item{FDRthreshold}{Default = 0.1}
 
-\item{runEBayes}{Runs eBayes after contrast.fit (default = TRUE)}
+\item{runEBayes}{Runs eBayes after contrast.fit (Default = TRUE)}
 
-\item{robust}{eBayes robust option (default = TRUE)}
+\item{robust}{eBayes robust option (Default = TRUE)}
 
-\item{proportion}{Proportion of genes expected to be differentially expressed
+\item{proportion}{Proportion of genes expected to be differentially expressed.
 (used by eBayes) (Default = 0.01)}
 
-\item{Qvalue}{Set TRUE to include Qvalues in topTable output (Default=FALSE)}
+\item{qValue}{Set TRUE to include Q-values in topTable output. (Default = FALSE)}
 
-\item{IHW}{Set TRUE to add FDR values from the IHW package (Defulat=FALSE)}
+\item{IHW}{Set TRUE to add FDR values from the IHW package. (Default = FALSE)}
 
-\item{verbose}{Set TRUE to print some information during processing (Default=FALSE)}
+\item{verbose}{Set TRUE to print some information during processing. (Default = FALSE)}
 }
 \value{
 The DGEobj with contrast fits and topTable/topTreat dataframes added.
 }
 \description{
-Take a DGEObj and a named list of contrasts to build. The DGEobj must
-contain a limma Fit object and associated DesignMatrix. Returns the DGEobj with
-contrast fit(s), contrast matrix and topTable/topTreat dataframes added.
+Takes a DGEobj and a named list of contrasts to build. The DGEobj must
+contain a limma Fit object and associated designMatrix. Returns the DGEobj with
+contrast fit(s), contrast matrix, and topTable/topTreat dataframes added.
 }
 \details{
-The contrastList is a named list composed of column names from the DesignMatrix
-of the DGEobj.  Each contrast is named to give
-it a short recognizable name.
+The contrastList is a named list composed of column names from the designMatrix
+of the DGEobj.  Each contrast is named to give it a short, recognizable name.
 
 Example contrastList \cr
 
@@ -76,27 +76,28 @@ contrastList = list( \cr
    T2 = "treatment2 - control" \cr
 ) \cr
 
-where treatment1, treatment2 and control are columns in the DesignMatrix
+where treatment1, treatment2, and control are columns in the designMatrix.
 
-The returned ContrastAnalysis list contains the following objects:
+The returned contrastAnalysis list contains the following objects:
 \itemize{
-   \item{"ContrastMatrix"} {a matrix}
-   \item{"Fit.Contrasts"} {a Fit object}
-   \item{"TopTableList"} {a List of dataframes}
-   \item{"TopTreatList"} {a List of dataframes}
+    \item{"contrastMatrix"} {a matrix}
+    \item{"Fit.Contrasts"} {a Fit object}
+    \item{"topTableList"} {a List of dataframes}
+    \item{"topTreatList"} {a List of dataframes}
 }
 }
 \examples{
-#run defaults
-myDgeObj  = runContrasts (myDgeObj, myFitName, ConstrastList)
-myDgeObj  = runContrasts (myDgeObj, myFitName, ConstrastList, runTopTable = TRUE
-       runTopTreat=TRUE, FoldChangeThreshold = 1.25)
+\dontrun{
+   # Run defaults
+   myDGEobj <- runContrasts(myDGEobj,
+                            myFitName,
+                            ConstrastList)
+   myDGEobj <- runContrasts(myDGEobj,
+                            myFitName,
+                            ConstrastList,
+                            runTopTable = TRUE
+                            runTopTreat = TRUE,
+                            foldChangeThreshold = 1.25)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGE;}
-\keyword{DGEobj}
-\keyword{RNA-Seq;}
-\keyword{contrasts;}

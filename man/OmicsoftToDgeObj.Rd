@@ -19,21 +19,24 @@ OmicsoftToDgeObj(
 \item{counts}{A text file name for count data (gene rows by sample columns) (required)
 [Default = "RNA-Seq.Count.Table.txt"]}
 
-\item{seqAnnotation}{Filename for Gene, isoform or exon level (row) annotation (required)
+\item{seqAnnotation}{File name for Gene, isoform or exon level (row) annotation (required)
 [Default = "RNA-Seq.Count.Annotation.txt"]}
 
-\item{design}{Filename for sample annotation with expt factors and other sample-associated
+\item{design}{File name for sample annotation with expt factors and other sample-associated
 data (required) [Default = RNA-Seq.Design.txt"]}
 
 \item{level}{One of "gene", "isoform", "exon" (required) [Default = "gene"]}
 
-\item{source}{Default = "Omicsoft.  Change if your data if from somewhere else.}
+\item{source}{Default = "Omicsoft.  Change if your data is from elsewhere.}
 
 \item{path}{File path for the three data files (Default = "./")}
 
 \item{customAttr}{A named list of custom attributes to attach to the DGEobj;
-Optional but highly encouraged;  suggestions: list(PID = "20170101-0001",
-XpressID = "123456", Genome = "Mouse.B38", GeneMobel = "Ensembl.R84")}
+Optional but highly encouraged.  Suggestions: list(PID = "20170101-0001",
+Genome = "Mouse.B38", GeneModel = "Ensembl.R84")}
+
+\item{gz}{Default = FALSE. If TRUE, adds ".gz" to a filename in the DGEobj attributes to
+support this type of file.}
 }
 \value{
 A DGEobj
@@ -43,50 +46,49 @@ Build a DGEobj from Omicsoft output or tabbed text files.
 }
 \details{
 User provides separate tab-delimited text files for row (gene) annotation,
-column (sample) anotation and "assays" (matrices of RxC e.g. counts, FPKM, etc).
+column (sample) annotation, and "assays" (matrices of row by columns, e.g. counts, FPKM, etc).
 
-Two global variables hold the names of the Omicsoft data files; .geneData
+Two global variables hold the names of the Omicsoft data files: .geneData
 and .isoformData.
 
-Data Requirements:
+\strong{Data Requirements:}
 
-Assay data should have rownames (sequence ids) and column names (sample IDs).
-Sequence annotation should also have the same rownames as assays.
+Assay data should have row names (sequence ids) and column names (sample IDs).
+Sequence annotation should also have the same row names as assays.
 
 If possible, the sequence annotation should include chromosome position data (chr,
 start, end, strand).
 
 Sample annotation is one row for each column in the count table.
-rownames(sampleannotation) == colnames(counts).
+rownames(sampleAnnotation) == colnames(counts).
 
 Function DGEobj::annotateDGEobj provides an easier way than the customAttr argument
-here.  annotateDGEobj reads key=value pairs from a text file to define
+here.  annotateDGEobj() reads key/value pairs from a text file to define
 attributes.
 }
 \examples{
+\dontrun{
+   # Defaults set for an omicsoft dataset:
+   MyDGEobj <- OmicsoftToDgeObj(customAttr = list(PID = "20170101-0001",
+                                                  Genome = "Mouse.B38",
+                                                  GeneModel = "Ensembl.R84")
 
-#Defaults set for an omicsoft dataset:
-MyDgeObj <- OmicsoftToDgeObj (customAttr=list(
-                                   PID = "20170101-0001",
-                                   XpressID = "123456",
-                                   Genome = "Mouse.B38",
-                                   GeneMobel = "Ensembl.R84")
-
-#I have data files from somewhere else
-MyDgeObj = OmicsoftToDgeObj (MyCounts, MyGeneAnnotation, MyDesign,
-                                   level = "gene",
-                                   customAttr = list(
-                                      PID = "20170101-0001",
-                                      XpressID = "123456",
-                                      Genome = "Mouse.B38",
-                                      GeneMobel = "Ensembl.R84")
-                             )
+   # Data files from somewhere else (not Omicsoft)
+   MyDGEobj <- OmicsoftToDGEobj(MyCounts,
+                                MyGeneAnnotation,
+                                MyDesign,
+                                level = "gene",
+                                customAttr = list(PID = "20170101-0001",
+                                                  Genome = "Mouse.B38",
+                                                  GeneModel = "Ensembl.R84")
+               )
+}
 
 }
 \author{
 John Thompson, \email{john.thompson@bms.com}
 }
-\keyword{DGEObj,}
+\keyword{DGEobj,}
 \keyword{Data}
 \keyword{Omicsoft,}
 \keyword{RNA-Seq,}

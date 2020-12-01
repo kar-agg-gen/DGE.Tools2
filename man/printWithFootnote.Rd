@@ -13,13 +13,13 @@ printWithFootnote(
 )
 }
 \arguments{
-\item{plotObject}{A ggplot2 plotobject}
+\item{plotObject}{A ggplot2 plot object}
 
-\item{footnote}{A path/filename for the graphic}
+\item{footnote}{A path/file name for the graphic}
 
-\item{fontface}{fontface for the footnotw (default = "plain")}
+\item{fontface}{Font face for the footnote (Default = "plain")}
 
-\item{fontsize}{size of the footnote font (default = 10)}
+\item{fontsize}{Size of the footnote font (Default = 10)}
 
 \item{hjust}{Specify horizontal justification (Default = -0.1)}
 }
@@ -27,26 +27,19 @@ printWithFootnote(
 Prints the graphic object to the console
 }
 \description{
-Print a ggplot2 object to the console/knitr report adding footnote text
-under the plot.  Use when you want the footnot to be underneath the plot
-labels.  Only prints the footnote once on a facetted plot.
+Print a ggplot2 object to the console or a knitr report adding footnote text
+under the plot.  Use when you want the footnote to be underneath the plot
+labels.  Only prints the footnote once on a faceted plot.
 }
 \examples{
-    #Write to the console or knitr report
+\dontrun{
+    # Write to the console or knitr report
     printWithFootnote(Myggplot, footnote = "Footnote Text")
 
-    #Capture to a file
-    png ("myplot.png", width=5, height=4, unit="in")
+    # Capture to a file
+    png("myplot.png", width = 5, height = 4, unit = "in")
     printWithFootnote(Myggplot, footnote = "Footnote Text")
     invisible(dev.off())
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{bmp,}
-\keyword{ggplot2,}
-\keyword{jpeg,}
-\keyword{pdf}
-\keyword{png,}
-\keyword{tiff,}

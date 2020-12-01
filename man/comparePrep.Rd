@@ -2,17 +2,17 @@
 % Please edit documentation in R/comparePlot.R
 \name{comparePrep}
 \alias{comparePrep}
-\title{Function comparePrep}
+\title{Create a df to use with comparePlot from topTable dfs}
 \usage{
 comparePrep(ttList, valueCol = "logFC", significanceCol = "P.Value")
 }
 \arguments{
-\item{ttList}{A named list of 2 topTable dataframes (required).  The
+\item{ttList}{A named list of 2 topTable dataframes (Required). The
 names are used as column names for the value columns in the output.}
 
-\item{valueCol}{Name of column containing values to plot (default = "logFC")}
+\item{valueCol}{Name of column containing values to plot (Default = "logFC")}
 
-\item{significanceCol}{Name of column to use for significance (default = "P.Value")}
+\item{significanceCol}{Name of column to use for significance (Default = "P.Value")}
 }
 \value{
 A data frame with 2 LogRatio measurements and 2 significance columns.  Columns 1 and 3 map
@@ -21,23 +21,24 @@ by the comparePlot function.
 }
 \description{
 Takes two topTable dataframes and outputs a dataframe suitable for function
-comparePlot (2 columns of LogRatio data and 2 columns of significant
-measures). Filter the two topTable to contain just the intersecting genes
+comparePlot() (2 columns of LogRatio data and 2 columns of significant
+measures). Filter the two topTable to contain only the intersecting genes
 (present in both datasets). The two dataframes must have the same type of
 gene IDs as rownames.
 }
 \examples{
-
-  #Retrieve the 1st two contrasts from a DGEobj
+\dontrun{
+  # Retrieve the 1st two contrasts from a DGEobj
   ttList <- getType(dgeObj, "topTable")[1:2]
 
-  #capture the default logFC and P.Value
+  # Capture the default logFC and P.Value
   compareDat <- comparePrep(ttList)
 
-  #switch to an FDR value for the significance measure
+  # Switch to an FDR value for the significance measure
   compareDat <- comparePrep(ttList, significanceCol="adj.P.Val")
 
-  #draw the plot
+  # Draw the plot
   cPlot <- comparePlot(compareDat)
+}
 
 }

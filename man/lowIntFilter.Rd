@@ -2,63 +2,56 @@
 % Please edit documentation in R/lowIntFilter.R
 \name{lowIntFilter}
 \alias{lowIntFilter}
-\title{Function  lowIntFilter}
+\title{Apply low intensity filters to a DGEobj}
 \usage{
 lowIntFilter(
-  x,
+  dgeObj,
   zfpkmThreshold,
   fpkThreshold,
   countThreshold,
   tpmThreshold,
   sampleFraction = 0.5,
-  genelength = NULL,
+  geneLength = NULL,
   verbose = FALSE
 )
 }
 \arguments{
-\item{x}{A DGEobj with RNA-Seq (counts) data
-(required).}
+\item{dgeObj}{A DGEobj with RNA-Seq (counts) data (Required)}
 
-\item{zfpkmThreshold}{Genes below this threshold are removed (-3.0 is recommended)}
+\item{zfpkmThreshold}{Genes below this threshold are removed. (-3.0 is recommended)}
 
-\item{fpkThreshold}{Genes below this threshold are removed (recommend 5).}
+\item{fpkThreshold}{Genes below this threshold are removed. (5 is recommended)}
 
-\item{countThreshold}{Genes below this threshold are removed (recommend 10).
+\item{countThreshold}{Genes below this threshold are removed (10 is recommended).
 Set to 0 to disable this filter.}
 
-\item{tpmThreshold}{Genes below this threshold are removed (tpm is supported
+\item{tpmThreshold}{Genes below this threshold are removed (TPM is supported
 by request, but FPK is a better length-normalized value to use as a filter)}
 
 \item{sampleFraction}{The proportion of samples that must meet the thresholds
-(Default = 0.5). Range >0 and <=1.}
+(Default = 0.5). Range > 0 and <= 1.}
 
-\item{genelength}{Vector of genelengths for rows of x. Required for FPK and
-zFPKM filters, unless x is a DGEobj.  If a DGEobj is supplied, genelength is
-retrieved from the DGEobj, unless supplied by the genelength argument.}
+\item{geneLength}{Vector of geneLengths for rows of dgeObj. Required for FPK and
+zFPKM filters, unless dgeObj is a DGEobj.  If a DGEobj is supplied, geneLength is
+retrieved from the DGEobj, unless supplied by the geneLength argument.}
 
-\item{verbose}{Prints some messages about the filtering process.}
+\item{verbose}{Prints messages about the filtering process.}
 }
 \value{
 Same class as input object with low intensity rows removed
 }
 \description{
 Takes a DGEobj as input and applies a combination of low
-intensity filters. raw count, zFPKM, TPM and/or FPK filters are supported.  A gene
+intensity filters. Raw count, zFPKM, TPM, and/or FPK filters are supported.  A gene
 must pass all active filters.  Not setting a threshold argument inactivates that threshold.
 }
 \examples{
+\dontrun{
+  # Simple count threshold
+  myDGEobj <- lowIntFilter(myDGEobj, countThreshold = 10)
 
-  #simple count threshold
-  myDgeObj  = lowIntFilter (myDgeObj, countThreshold=10)
-
-  #count and zFPKM thresholds
-  myDgeObj  = lowIntFilter (myDgeObj, countThreshold=10, zfpkmThreshold = -3.0)
+  # Count and zFPKM thresholds
+  myDGEobj <- lowIntFilter(myDGEobj, countThreshold = 10, zfpkmThreshold = -3.0)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{RNA-Seq;}
-\keyword{counts;}
-\keyword{intensity}
-\keyword{low}

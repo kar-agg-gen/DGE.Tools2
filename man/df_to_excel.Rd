@@ -21,30 +21,26 @@ df_to_excel(
 
 \item{sheetname}{Name for the Excel sheet (Default = "data")}
 
-\item{widthFirstCol}{width of 1st column (rownames) (Default=40)}
+\item{widthFirstCol}{Width of 1st column (rownames) (Default = 40)}
 
-\item{widthOtherCol}{width of 1st column (rownames) (Default=10)}
+\item{widthOtherCol}{Width of 1st column (rownames) (Default = 10)}
 
-\item{baseFontSize}{base font for Excel file (Default=10)}
+\item{baseFontSize}{Base font for Excel file (Default = 10)}
 
-\item{useRownames}{Creates a spreadsheet without rownames (default=TRUE).  Set to FALSE
+\item{useRownames}{Creates a spreadsheet without rownames (default = TRUE).  Set to FALSE
 when there is no column suitably unique to use for rownames}
 }
 \value{
-Writes an Excel file to the specified file.
+Writes an Excel file to the specified filename.
 }
 \description{
 Take a dataframe with rownames and output to an Excel spreadsheet.
 Freezes the row and colnames and sets columns into Excel filter mode.
 }
 \examples{
-#merge a set of topTable contrasts into one data.frame
-MyContrastTable  = topTable.merge (topTablelist)
-df_to_excel(MyContrastTable, "myExcelFile.xlsx")
-
+\dontrun{
+   # Merge a set of topTable contrasts into one data.frame
+   MyContrastTable <- topTable.merge(topTablelist)
+   df_to_excel(MyContrastTable, "myExcelFile.xlsx")
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
 }
-\keyword{Excel}
-\keyword{dataframe,}

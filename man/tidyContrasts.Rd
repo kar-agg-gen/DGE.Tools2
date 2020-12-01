@@ -2,49 +2,43 @@
 % Please edit documentation in R/tidyContrasts.R
 \name{tidyContrasts}
 \alias{tidyContrasts}
-\title{Function  tidyContrasts}
+\title{Create tidy contrast list of topTable contrast dfs}
 \usage{
-tidyContrasts(x, rownameColumn = "rownames", includeColumns)
+tidyContrasts(contrastObj, rownameColumn = "rownames", includeColumns)
 }
 \arguments{
-\item{x}{A DGEobj or named list of contrast dataframes
-(required).}
+\item{contrastObj}{A DGEobj or named list of contrast dataframes. (Required)}
 
 \item{rownameColumn}{Name of the rowname column. If a column by this
-name does not exist, it is created from the rownames property (rownames_to_column(var=rownameColumn))}
+name does not exist, it is created from the rownames property.}
 
-\item{includeColumns}{A character vector of columns to include in the output (default = colnames of the first contrast)}
+\item{includeColumns}{A character vector of columns to include in the output.
+(Default = colnames of the first contrast)}
 }
 \value{
-A DF with merged contrast data.
+A dataframe with merged contrast data.
 }
 \description{
 Takes a DGEobj or contrast list as input and merges them into one tidy dataframe.
 A contrast list is simply a list of topTable contrast dataframes. For
-example, DGEobj::getType(mydgeobj, "topTable") would retrieve a list of
+example, DGEobj::getType(myDGEobj, "topTable") would retrieve a list of
 contrasts from a DGEobj.  The contrast list must be a named list as the
 contrast names are used during the merge operation.
 }
 \details{
 The input may or may not have rownames. If supplied rownameColumn does not exist as a colname in
-the dataframes, it is created from the rownames.  In tidy style, the output will have no rownames.
+the dataframes, it is created from the rownames. In tidy style, the output will have no rownames.
 
 The contrast names will be used as a new column in the tidy output format.
 }
 \examples{
+\dontrun{
+  # Get contrasts directly from a DGEobj
+  myMergedTidyDF <- tidyContrasts(myDGEobj)
 
-  #Get contrasts directly from a DGEobj
-  MyMergedTidyDF <- tidyContrasts (myDgeObj)
-
-  #Assemble a list of contrasts from two DGEobjs; just logFC and conf intervals
-  myContrasts <- c(getType(DGEobj1, "topTable"), getType(DEobj2, "topTable"))
-  MyMergedTidyDF <- tidyContrasts (myContrasts, includeColumns = c("logFC", "CI.R", "CI.L"))
+  # Assemble a list of contrasts from two DGEobjs; just logFC and conf intervals
+  myContrasts <- c(getType(DGEobj1, "topTable"), getType(DGEobj2, "topTable"))
+  myMergedTidyDF <- tidyContrasts(myContrasts, includeColumns = c("logFC", "CI.R", "CI.L"))
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{RNA-Seq;}
-\keyword{contrasts;}
-\keyword{merge}
-\keyword{tidy}

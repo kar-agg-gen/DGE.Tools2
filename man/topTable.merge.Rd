@@ -2,7 +2,7 @@
 % Please edit documentation in R/topTable.merge.R
 \name{topTable.merge}
 \alias{topTable.merge}
-\title{Function  topTable.merge}
+\title{Merge specified topTable df cols}
 \usage{
 topTable.merge(
   ttlist,
@@ -15,25 +15,23 @@ topTable.merge(
 The dataframes in the list should have rownames (geneIDs).}
 
 \item{colNames}{The list of column names of the data column to extract to a
-matrix (Default = c("logFC", "AdeExpr", "P.Value", "adj.P.Val"))}
+matrix (Default = c("logFC", "AveExpr", "P.Value", "adj.P.Val"))}
 
-\item{digits}{Number of decimal places for specified columns.  Should be same
-length as colNames.(Default = c(2, 2, 4, 3)). If one value supplied, it is used
+\item{digits}{Number of decimal places for specified columns. Should be same
+length as colNames. (Default = c(2, 2, 4, 3)). If one value supplied, it is used
 for all columns.}
 }
 \value{
-A matrix containing the extracted columns
+A matrix containing the extracted columns.
 }
 \description{
 Take a list of topTable dataframes and consolidate output for specified
-columns.  Optionally output as an Excel spreadsheet.  Should work on any named
-list of dataframes where each member of the list has the same columns.
+columns. Should work on any named list of dataframes where each member of the list
+has the same columns.
 }
 \examples{
-MyContrastTable  = topTable.merge (topTablelist)
+\dontrun{
+    myContrastTable <- topTable.merge(topTablelist)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{topTable}

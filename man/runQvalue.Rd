@@ -2,37 +2,36 @@
 % Please edit documentation in R/runQvalue.R
 \name{runQvalue}
 \alias{runQvalue}
-\title{Function  runQvalue}
+\title{Calculate and add q-value and lFDR to dataframe}
 \usage{
 runQvalue(contrastList, pvalField = "P.Value", ...)
 }
 \arguments{
-\item{contrastList}{An list of dataframes with a pvalue column (all tables
-must use the same colname for the pval column)}
+\item{contrastList}{A list of dataframes with a p-value column (all tables
+must use the same colname for the p-value column.)}
 
-\item{pvalField}{Optional. (Default = "P.Value")  Not needed if you're working
-with topTable output.  Use to define the colname of the pvalue field in
-each dataframe.}
+\item{pvalField}{Define the colname of the p-value field in
+each dataframe. Not needed if using topTable output. (Optional. Default = "P.Value")}
 
 \item{...}{Optional arguments passed to the qvalue function (See ?qvalue)}
 }
 \value{
-The input contrastList now containing qvalue and lfdr columns
-  in each dataframes.
+The input contrastList now containing q-value and lFDR columns
+  in each dataframe.
 }
 \description{
 Takes an list of contrasts (e.g. topTable output or other dataframes that contain
-a pvalue column).  Adds a qvalue and local FDR (lfdr) column to each dataframe.
+a p-value column).  Adds a q-value and local FDR (lFDR) column to each dataframe.
 }
 \details{
-The qvalue package from John Storey at Princeton takes a list of pvalues and
-calculates a qvalue and a Local FDR (LFDR). The qvalue is essentially a less
+The qvalue package from John Storey at Princeton takes a list of p-values and
+calculates a q-value and a Local FDR (lFDR). The q-value is essentially a less
 conservative FDR estimate compared to the default Benjamini-Hochberg FDR
-produced by topTable analysis (i.e. will give you more differential genes at
-the same nominal cutoff). The qvalue function also produces a Local FDR
-(lfdr) column which answers a slightly different and possibly more relevant
-question.  The BH FDR (adj.P.Val in topTable data.frames) and qvalue tell you
-what the false discovery rate is for a list of genes at a given threshold.
+produced by topTable analysis (i.e. will give more differential genes at
+the same nominal cutoff). The q-value function also produces a Local FDR
+(lFDR) column which answers a slightly different and possibly more relevant
+question. The BH FDR (adj.P.Val in topTable data.frames) and q-value gives
+the false discovery rate is for a list of genes at a given threshold.
 The local FDR attempts to answer the question: what is the probability that
 this particular gene is a false discovery?
 
@@ -40,14 +39,11 @@ See \url{http://genomine.org/papers/Storey_FDR_2011.pdf} for a brief introductio
 to FDRs and q-values.
 }
 \examples{
-MyContrastList <- runQvalue(MyContrastList)
-#The magrittr way:
-MyContrastList \%<>\% runQvalue
+\dontrun{
+   myContrastList <- runQvalue(myContrastList)
+
+   # The magrittr way:
+   myContrastList \%<>\% runQvalue
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{contrasts}
-\keyword{lfdr;}
-\keyword{qvalue;}

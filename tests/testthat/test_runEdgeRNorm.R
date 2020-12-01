@@ -1,0 +1,32 @@
+context("DGEtools - tests for runEdgeRNorm.R functions")
+
+
+test_that('runEdgeRNorm: runEdgeRNorm()', {
+
+    DGEobj1_minus_DGElist <- rmItem(DGEobj1, "DGEList")
+
+    runEdgeRNorm_one_test <- runEdgeRNorm(DGEobj1_minus_DGElist, plotFile = NULL)
+    runEdgeRNorm_one_test_DGEList <- getType(runEdgeRNorm_one_test, "DGEList")
+
+    expect_s3_class(runEdgeRNorm_one_test, "DGEobj")
+    expect_true(is.list(runEdgeRNorm_one_test_DGEList))
+    expect_equal(length(runEdgeRNorm_one_test_DGEList$DGEList), 2)
+    expect_equal(names(runEdgeRNorm_one_test_DGEList$DGEList), c("counts", "samples"))
+
+    runEdgeRNorm_two_test <- runEdgeRNorm(DGEobj1_minus_DGElist, normMethod = "RLE", plotFile = NULL)
+    runEdgeRNorm_two_test_DGEList <- getType(runEdgeRNorm_two_test, "DGEList")
+
+    expect_s3_class(runEdgeRNorm_two_test, "DGEobj")
+    expect_true(is.list(runEdgeRNorm_two_test_DGEList))
+    expect_equal(length(runEdgeRNorm_two_test_DGEList$DGEList), 2)
+    expect_equal(names(runEdgeRNorm_two_test_DGEList$DGEList), c("counts", "samples"))
+
+    expect_error(runEdgeRNorm(runEdgeRNorm_test),
+                 regexp = "object 'runEdgeRNorm_test' not found")
+})
+
+
+test_that('runEdgeRNorm: incorrect usage', {
+    expect_error(runEdgeRNorm(),
+                 regexp = "argument \"dgeObj\" is missing, with no default")
+})

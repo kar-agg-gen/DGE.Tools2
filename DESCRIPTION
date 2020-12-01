@@ -1,108 +1,60 @@
-Package: DGE.Tools2
-Title: A function library to facilitate Differential Gene Expression Analysis
-Version: 0.9.83
+Package: DGEtools
+Title: Functions to facilitate Differential Gene Expression (DGE) Analysis
+Version: 1.0.0.9000
 Authors@R: person("John", "Thompson", email = "john.thompson@bms.com",
                   role = c("aut", "cre"))
-Description: Provides a function toolkit to facilite reproducible RNA-Seq DGE
-    analysis and improve TBio "branding" by standardizing several types of commmon
-    plots. The functions can be grouped into three categories (DGE workflow, DGE
-    plotting tools and mapping/unit conversion functions. The DGE workflow functions
-    include: Function initDgeObj which builds a DGEobj data structure from counts and
-    annotation; Function runEdgeRNorm which normalizes counts; Function runVoom runs
+Description: Provides a function toolkit to facilitate reproducible RNA-Seq DGE
+    analysis by standardizing several types of common
+    plots. The functions can be grouped into three categories: DGE workflow, DGE
+    plotting tools, and mapping/unit conversion functions. The DGE workflow functions
+    include: Function runEdgeRNorm which normalizes counts; Function runVoom runs
     limma voom and lmfit adding additional data to the DGEobj; Function runSVA for
     detrending unknown covariates. A variety of QC plots are produced to evaluate
     data quality. The DGE Plotting tools are suitable for downstream analysis
     visualizations and include: profilePlot, volcanoPlot, comparePlot, plotPvalHist,
-    ggplotMDS and others. Function convertCounts is supplied to convert a counts
+    ggplotMDS, and others. Function convertCounts is supplied to convert a counts
     matrix and produce CPM/TPM/FPKM, logged or not, normalized or not.
 Depends:
     R (>= 3.3.1)
-License: BMS Proprietary
+License: GPL-3
+Encoding: UTF-8
 LazyData: true
 Imports:
     assertthat,
-    AnnotationDbi,
     dplyr (>= 0.8.0),
-    DGEobj (>= 0.9.33),
-    edgeR,
-    gdata,
-    GenomicRanges,
+    DGEobj (>= 1.0.0),
     ggplot2 (>= 3.0.0),
     ggrepel,
-    ggiraph,
     grDevices,
     grid,
     gridExtra,
     igraph,
-    IRanges,
-    limma (>= 3.38.0),
     magrittr (>= 1.5),
-    pheatmap,
-    psych,
-    qvalue,
-    RColorBrewer,
-    reshape2 (>= 1.4.1),
-    RNASeqPower,
-    S4Vectors,
     stats,
-    stringi,
     stringr,
-    SummarizedExperiment (>= 1.10.0),
-    sva,
-    testthat,
     tibble,
     tidyr,
     tools,
-    zFPKM,
-    checkmate,
-    IHW,
-    glue,
     openxlsx,
-    tibble
+    Matrix,
+    matrixStats,
+    rlang,
+    methods,
+    statmod,
+    edgeR,
+    IHW,
+    limma (>= 3.38.0),
+    qvalue,
+    RNASeqPower,
+    sva,
+    zFPKM
 Suggests:
+    knitr,
+    rmarkdown,
+    testthat,
     org.Hs.eg.db,
     org.Mm.eg.db,
     org.Rn.eg.db,
-    org.Cf.eg.db,
-    knitr,
-    rmarkdown
-Collate:
-    'DGE_Tools.R'
-    'OmicsoftToDgeObj.R'
-    'ThemePack.R'
-    'cdfPlot.R'
-    'comparePlot.R'
-    'convertCounts.R'
-    'extractCol.R'
-    'ggplotMDS.R'
-    'obsPlot.R'
-    'plotDisp.R'
-    'plotPValHist.R'
-    'printAndSave.R'
-    'profilePlot.R'
-    'runContrasts.R'
-    'runEdgeRNorm.R'
-    'runIHW.R'
-    'runQvalue.R'
-    'runSVA.R'
-    'runVoom.R'
-    'runPower.R'
-    'summarizeSigCounts.R'
-    'volcanoPlot.R'
-    'isoformFrac.R'
-    'plotNorm.R'
-    'checkSex.R'
-    'topTable.merge.R'
-    'lowIntFilter.R'
-    'tidyContrasts.R'
-    'tidyIntensity.R'
-    'obsPlot2.R'
-    'logRatioPlot.R'
-    'graphDGEobj.R'
-    'QCplots.R'
-    'voomWorkflow.R'
-    'rsq_calc.R'
-    'rctutils.R'
-    'df_to_excel.R'
-RoxygenNote: 7.0.2
+    org.Cf.eg.db
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

@@ -2,52 +2,47 @@
 % Please edit documentation in R/runIHW.R
 \name{runIHW}
 \alias{runIHW}
-\title{Function  runIHW}
+\title{Apply Independent Hypothesis Weighting (IHW) to a list of dfs}
 \usage{
 runIHW(contrastList, alpha = 0.1, FDRthreshold = 0.1, ...)
 }
 \arguments{
 \item{contrastList}{A list of topTable dataframes.}
 
-\item{alpha}{The alpha value is the FDR level you wish to interogate (range 0-1; default = 0.1)}
+\item{alpha}{Alpha should be the desired FDR level to interrogate (range 0-1; Default = 0.1)}
 
-\item{...}{other arguments are passed directly to the ihw function (see ?ihw).}
+\item{FDRthreshold}{Threshold value for the p-values of a dataframe (Default = 0.1)}
+
+\item{...}{other arguments are passed directly to the ihw function (see ?ihw)}
 }
 \value{
 A list of lists.  The first element is the original contrastList with
-  additional IHW columns added to each dataframe.   The TopTable dataframes
-  will contain additional columns added by the ihw analysis and prefixed with
+  additional IHW columns added to each dataframe. The topTable dataframes
+  will contain additional columns added by the IHW analysis and prefixed with
   "ihw." The second list element is the IHW result dataframe.
 }
 \description{
 This is a wrapper around the independent hypothesis weighting package that
-takes a list of topTable dataframes and applies Independent Hypothesis
-Weighting (IHW) to each topTable dataframe in the list.
+takes a list of topTable data frames and applies Independent Hypothesis
+Weighting (IHW) to each topTable data frame in the list.
 }
 \details{
 IHW is a method developed by N. Ignatiadis (http://dx.doi.org/10.1101/034330)
 to weight FDR values based on a covariate (AveExpr in this case).
 
-The IHW FDR values are added as additional columns to the topTable dataframes.
+The IHW FDR values are added as additional columns to the topTable data frames.
 
-Note that it is impractical to run IHW on a list of genes less than ~5000
-because operationally, it breaks the data into bins of 1500 genes for the
-analysis if bins = 1, IHW converges on the BH FDR value and there's no point.
-So we run IHW on the complete set of detected genes from topTable results
+Note that it is impractical to run IHW on a list of genes less than ~5000.
+Operationally, IHW breaks the data into bins of 1500 genes for the
+analysis. If bins = 1, IHW converges on the BH FDR value.
+Instead, run IHW on the complete set of detected genes from topTable results
 (not topTreat).
 }
 \examples{
-IHWresults <- runIHW(MyContrastList)
-MyContrastList <- IHWresults[[1]]
-IHWdf <- IHWresults[[2]]
+\dontrun{
+   IHWresults <- runIHW(MyContrastList)
+   MyContrastList <- IHWresults[[1]]
+   IHWdf <- IHWresults[[2]]
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{bmp,}
-\keyword{ggplot2,}
-\keyword{jpeg,}
-\keyword{pdf}
-\keyword{png,}
-\keyword{tiff,}

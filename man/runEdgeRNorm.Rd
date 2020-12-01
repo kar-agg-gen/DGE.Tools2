@@ -2,44 +2,36 @@
 % Please edit documentation in R/runEdgeRNorm.R
 \name{runEdgeRNorm}
 \alias{runEdgeRNorm}
-\title{Function  runEdgeRNorm (edgeR normlization )}
+\title{Run edgeR TMM normalization on DGEobj}
 \usage{
 runEdgeRNorm(
-  dat,
+  dgeObj,
   normMethod = "TMM",
   plotFile = "TMM_Norm.Factors.PNG",
   plotLabels = NULL
 )
 }
 \arguments{
-\item{dat}{A DGEobj or RSE object data structure containing counts, design
-data and gene annotation}
+\item{dgeObj}{A DGEobj containing counts, design data, and gene annotation.}
 
-\item{normMethod}{One of "TMM", "RLE", "upperquartile" or "none". Default = "TMM"}
+\item{normMethod}{One of "TMM", "RLE", "upperquartile", or "none". (Default = "TMM")}
 
-\item{plotFile}{Enable a Barplot of the norm.factors produced (Default = "Norm.Factors.PNG")
+\item{plotFile}{Enable a bar plot of the norm.factors produced (Default = "Norm.Factors.PNG")
 Set to NULL to disable the plot.}
 
 \item{plotLabels}{Sample labels for the plot. Length must equal the number of
-samples. (Default = NULL;  sample number will be displayed)}
+samples. (Default = NULL; sample number will be displayed)}
 }
 \value{
-A DGEObj with a normalized DGEList added.
+A DGEobj with a normalized DGEList added.
 }
 \description{
 Returns a DGEobj containing DGEList object representing the result of
  edgeR TMM normalization.
 }
 \examples{
-MyDgeObj <- runEdgeRNorm (RSE)
-
-MyDgeObj <- runEdgeRNorm (MyDgeObj)
+\dontrun{
+   myDGEobj <- runEdgeRNorm(myDGEobj)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{Entrez,}
-\keyword{GeneID}
-\keyword{gene}
-\keyword{symbol,}

@@ -2,14 +2,13 @@
 % Please edit documentation in R/voomWorkflow.R
 \name{voomWorkflow}
 \alias{voomWorkflow}
-\title{Function voomWorkflow}
+\title{Run a typical voom workflow}
 \usage{
 voomWorkflow(
   dgeObj,
   formula,
-  projectName,
   designMatrixName,
-  dupcorBlock,
+  dupCorBlock,
   outputPath = "./",
   annotationFile,
   proteinCodingOnly = FALSE,
@@ -18,70 +17,60 @@ voomWorkflow(
 )
 }
 \arguments{
-\item{dgeObj}{A class dgeObj with counts, gene annotation and sample
-annotation}
+\item{dgeObj}{A class DGEobj with counts, gene annotation, and sample
+annotation.}
 
-\item{formula}{A text representation of the formula you want to use (clas
-character not formula)}
+\item{formula}{A text representation of the desired formula (input of class
+character, not formula.)}
 
-\item{projectName}{This should be the project name from Xpress or Omicsoft}
+\item{designMatrixName}{User defined name for the design matrix.}
 
-\item{designMatrixName}{User defined name for the design matrix}
-
-\item{dupcorBlock}{A blocking vector to define which samples belong to the
+\item{dupCorBlock}{A blocking vector to define which samples belong to the
 same subject to be used with the duplicateCorrelation function.}
 
-\item{outputPath}{Where to send output plots}
+\item{outputPath}{Where to send output plots.}
 
-\item{annotationFile}{Text file of key=value pairs to populate DGEobj
-attributes (optional but highly advised)}
+\item{annotationFile}{Text file of key/value pairs to populate DGEobj
+attributes. (Optional but highly advised)}
 
-\item{proteinCodingOnly}{Set to TRUE to keep only protein coding genes
-(default = TRUE)}
+\item{proteinCodingOnly}{Set to TRUE to keep only protein coding genes.
+(Default = TRUE)}
 
 \item{sampleFraction}{Fraction of samples that must meet intensity thresholds
-to keep a gene (Default = 0.5)}
+to keep a gene. (Default = 0.5)}
 
 \item{...}{Additional named arguments passed to the low intensity filter
 function to define the desired intensity filter type (see ?lowIntFilter). Settable
-arguments for low intensity filtering are: fracThreshold (default = 0.5),
-countThreshold, fpkThreshold, zfpkmThreshold, tpmThreshold.  You can use
-countThreshold plus one other argument.  If no arguments supplied here, the
-following defaults apply (fracThreshold=0.5, countThreshold=10,
-fpkThreshold=5).  To disable intensity filtering use: sampleFraction = 0.}
+arguments for low intensity filtering are: fracThreshold (Default = 0.5),
+countThreshold, fpkThreshold, zfpkmThreshold, tpmThreshold.  countThreshold plus one
+other argument can be used.  If no arguments supplied here, the
+following defaults apply the following: fracThreshold = 0.5, countThreshold = 10,
+fpkThreshold = 5. To disable intensity filtering use sampleFraction = 0.}
 }
 \value{
-A DGEobj with analysis results added
+A DGEobj with analysis results added.
 }
 \description{
 This function runs several steps in the RNA-Seq pipeline in one fell swoop.
-It supports duplicateCorrelation if you provide a blocking vector.  It
-includes low intensity filtering, filtering for protein coding genes and
+It supports duplicateCorrelation a blocking vector is provided. It
+includes low intensity filtering, filtering for protein coding genes, and
 filters out zero effective length genes (genes shorter than library size).
-Then it runs TMM normalization, voomWithQualityWeights, lmFit and eBayes.
+Then it runs TMM normalization, voomWithQualityWeights, lmFit, and eBayes.
 }
 \details{
-To incorporate SVA analysis, you need to run SVA first and add the SVA
-variables to your design table. Then you can proceed with this function.
+To incorporate SVA analysis, run SVA first and then add the SVA
+variables to the design table. After those steps, voomWorkflow can be run.
 
-After running this step. You define your contrasts and execute runContrast to
+After running this function, define the contrasts and execute runContrast to
 complete DGE calculations.
 }
 \examples{
-
-   MyDgeObj <- voomWorkflow(MyDgeObj,
+\dontrun{
+   myDGEobj <- voomWorkflow(myDGEobj,
                             formula = "~ 0 + ReplicateGroup",
-                            projectName = "MyProjectName",
                             designMatrixName = "ReplicateGroup",
                             annotationFile = "MyProjectName.txt",
-                            proteinCodingOnly = TRUE,
-                            )
+                            proteinCodingOnly = TRUE)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGEobj,}
-\keyword{RNA-Seq,}
-\keyword{limma}
-\keyword{voom}

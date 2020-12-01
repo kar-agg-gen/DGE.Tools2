@@ -2,7 +2,7 @@
 % Please edit documentation in R/runPower.R
 \name{runPower}
 \alias{runPower}
-\title{Function runPower (DGE.Tools2)}
+\title{Run a power analysis on counts and design matrix}
 \usage{
 runPower(
   counts,
@@ -15,43 +15,42 @@ runPower(
 )
 }
 \arguments{
-\item{counts}{A counts matrix (required)}
+\item{counts}{A counts matrix. (Required)}
 
-\item{designMatrix}{A design matrix (required)}
+\item{designMatrix}{A design matrix. (Required)}
 
-\item{depth}{A  set of depth to use in the calculations.  The default depths of
+\item{depth}{A set of depth to use in the calculations.  The default depths of
 c(10, 100, 1000) respectively represent a detection limit, below average
-expression and median expression levels, express in readcount units.}
+expression, and median expression levels, expressed in readcount units.}
 
-\item{N}{A set of N value to report power for (default = c(3, 6, 10, 20))}
+\item{N}{A set of N value to report power for. (Default = c(3, 6, 10, 20))}
 
-\item{effectSize}{A set of fold change values to test (default = c(1.2, 1.5, 2))}
+\item{FDR}{FDR thresholds to filter for for FDR vs. Power graph. (Default = c(0.05, 0.1))}
 
-\item{return}{One of "dataframe", "plots", "both" (default = "both").
-Two plots are generated; a ROC curve (FDR vs Power) and a plot of N vs Power.}
+\item{effectSize}{A set of fold change values to test. (Default = c(1.2, 1.5, 2))}
+
+\item{return}{One of "dataframe", "plots", "both". (Default = "both").
+Two plots are generated; a ROC curve (FDR vs. Power) and a plot of N vs. Power.}
 }
 \value{
-A list of result objects defined by the "return" argument.
+A list of result objects as defined by the "return" argument.
 }
 \description{
 Take a counts matrix and design matrix and return a power analysis using
-the RNASeqPower package.  The counts matrix should be prefiltered to remove
-non-expressed genes by your favorite filtering critera.  The design matrix
+the RNASeqPower package. The counts matrix should be pre-filtered to remove
+non-expressed genes using an appropriate filtering criteria. The design matrix
 should describe the major sources of variation so the procedure can dial
 out those known effects for the power calculations.
 }
 \details{
-If return = "dataframe" the function will return a tall skinny dataframe
-of power calculation for various requested combinations of N and signficance
+If return = "dataframe," the function will return a tall skinny dataframe
+of power calculations for various requested combinations of N and significance
 thresholds.  If return = "plots" or "both", a list is returned with two
 ggplots (plots) or the plots plus the dataframe (both).
 }
 \examples{
-   MyResults <- runPower(counts, designMatrix)
+\dontrun{
+   myPowerResults <- runPower(counts, designMatrix)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGEobj}
-\keyword{RNA-Seq,}

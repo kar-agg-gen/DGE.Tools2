@@ -2,27 +2,25 @@
 % Please edit documentation in R/plotNorm.R
 \name{plotNorm}
 \alias{plotNorm}
-\title{Function plotNorm}
+\title{Plot log2CPM before and after normalization}
 \usage{
-plotNorm(dat, plotType = "box", normalize = "tmm", baseFont = 12)
+plotNorm(dat, plotType = "box", normalize = "tmm")
 }
 \arguments{
-\item{dat}{A DGEobj or counts matrix}
+\item{dat}{A DGEobj or counts matrix.}
 
-\item{plotType}{One of "box" or "density" (default="box")}
+\item{plotType}{One of "box" or "density." (Default = "box")}
 
 \item{normalize}{Default = "TMM" and invokes TMM normalization. Other allowed
-values are: "RLE","upperquartile", "none". Invokes edgeR::calcNormFactors for
+values are: "RLE", "upperquartile", or "none". Invokes edgeR::calcNormFactors for
 normalization.}
-
-\item{baseFontSize}{Passed on as base font size in ggplot theme. (default=12)}
 }
 \value{
-A  facetted ggplot plot showing before/after normalization
+A faceted ggplot plot showing before/after log2CPM normalization.
 }
 \description{
-Takes a DGEobj (containing counts) or a counts matrix as input. Returns a ggplot object containing
-a faceted plot of log2CPM before/after normalization. Either a box plot or density plot
+Takes a DGEobj containing counts or a counts matrix as input. Returns a ggplot object containing
+a faceted plot of log2CPM before and after normalization. Either a box plot or density plot
 type can be chosen.
 }
 \details{
@@ -30,12 +28,9 @@ Normalization is performed by edgeR::calcNormFactors. Note TMM is specifically t
 data.  Thus this function is only appropriate for count-based data.
 }
 \examples{
-   MyggPlot <- plotNorm(MyDgeObj, plotType="box")
-   MyggPlot <- plotNorm(counts, plotType="density")
+\dontrun{
+   myNormPlotBox <- plotNorm(myDGEobj, plotType = "box")
+   myNormPlotDensity <- plotNorm(counts, plotType = "density")
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{DGEobj}
-\keyword{RNA-Seq,}

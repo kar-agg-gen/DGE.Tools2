@@ -1,13 +1,11 @@
-### Function runContrasts ###
-#' Function  runContrasts
+#' Calculate contrast fits and contrast matrix
 #'
-#' Take a DGEObj and a named list of contrasts to build. The DGEobj must
-#' contain a limma Fit object and associated DesignMatrix. Returns the DGEobj with
-#' contrast fit(s), contrast matrix and topTable/topTreat dataframes added.
+#' Takes a DGEobj and a named list of contrasts to build. The DGEobj must
+#' contain a limma Fit object and associated designMatrix. Returns the DGEobj with
+#' contrast fit(s), contrast matrix, and topTable/topTreat dataframes added.
 #'
-#' The contrastList is a named list composed of column names from the DesignMatrix
-#' of the DGEobj.  Each contrast is named to give
-#' it a short recognizable name.
+#' The contrastList is a named list composed of column names from the designMatrix
+#' of the DGEobj.  Each contrast is named to give it a short, recognizable name.
 #'
 #' Example contrastList \cr
 #'
@@ -16,44 +14,51 @@
 #'    T2 = "treatment2 - control" \cr
 #' ) \cr
 #'
-#'where treatment1, treatment2 and control are columns in the DesignMatrix
+#' where treatment1, treatment2, and control are columns in the designMatrix.
 #'
-#'The returned ContrastAnalysis list contains the following objects:
-#'\itemize{
-#'    \item{"ContrastMatrix"} {a matrix}
-#'    \item{"Fit.Contrasts"} {a Fit object}
-#'    \item{"TopTableList"} {a List of dataframes}
-#'    \item{"TopTreatList"} {a List of dataframes}
-#'}
+#' The returned contrastAnalysis list contains the following objects:
+#' \itemize{
+#'     \item{"contrastMatrix"} {a matrix}
+#'     \item{"Fit.Contrasts"} {a Fit object}
+#'     \item{"topTableList"} {a List of dataframes}
+#'     \item{"topTreatList"} {a List of dataframes}
+#' }
 #'
-#' @author John Thompson, \email{john.thompson@@bms.com}
-#' @keywords RNA-Seq; DGE; contrasts; DGEobj
-#'
-#' @param dgeObj A DGEobj object containing a Fit object and design matrix (required)
+#' @param dgeObj A DGEobj object containing a Fit object and design matrix. (Required)
 #' @param designMatrixName The name of the design matrix within dgeObj to use for
-#'    contrast analysis  (required)
-#' @param contrastList A named list of contrasts  (required)
+#'    contrast analysis. (Required)
+#' @param contrastList A named list of contrasts. (Required)
 #' @param contrastSetName Name for the set of contrasts specified in contrastList.  Defaults
-#'   to "fitName_cf".  Change only if you need to create 2 or more contrast sets from the same fit.
-#' @param runTopTable runs topTable on the specified contrasts (Default = TRUE)
-#' @param runTopTreat runs topTreat on the specified contrasts (Default = FALSE)
-#' @param FoldChangeThreshold Only applies to TopTreat (Default = 1.5)
-#' @param runEBayes Runs eBayes after contrast.fit (default = TRUE)
-#' @param robust eBayes robust option (default = TRUE)
-#' @param PvalueThreshold Default = 0.01
+#'   to "fitName_cf".,Should only be changed to create 2 or more contrast sets from the same fit.
+#' @param runTopTable Runs topTable on the specified contrasts. (Default = TRUE)
+#' @param runTopTreat Runs topTreat on the specified contrasts.
+#']== (Default = FALSE)
+#' @param foldChangeThreshold Only applies to topTreat (Default = 1.5)
+#' @param runEBayes Runs eBayes after contrast.fit (Default = TRUE)
+#' @param robust eBayes robust option (Default = TRUE)
+#' @param pValueThreshold Default = 0.01
 #' @param FDRthreshold Default = 0.1
-#' @param proportion Proportion of genes expected to be differentially expressed
+#' @param proportion Proportion of genes expected to be differentially expressed.
 #'   (used by eBayes) (Default = 0.01)
-#' @param Qvalue Set TRUE to include Qvalues in topTable output (Default=FALSE)
-#' @param IHW Set TRUE to add FDR values from the IHW package (Defulat=FALSE)
-#' @param verbose Set TRUE to print some information during processing (Default=FALSE)
+#' @param qValue Set TRUE to include Q-values in topTable output. (Default = FALSE)
+#' @param IHW Set TRUE to add FDR values from the IHW package. (Default = FALSE)
+#' @param verbose Set TRUE to print some information during processing. (Default = FALSE)
+#'
 #' @return The DGEobj with contrast fits and topTable/topTreat dataframes added.
 #'
 #' @examples
-#' #run defaults
-#' myDgeObj  = runContrasts (myDgeObj, myFitName, ConstrastList)
-#' myDgeObj  = runContrasts (myDgeObj, myFitName, ConstrastList, runTopTable = TRUE
-#'        runTopTreat=TRUE, FoldChangeThreshold = 1.25)
+#' \dontrun{
+#'    # Run defaults
+#'    myDGEobj <- runContrasts(myDGEobj,
+#'                             myFitName,
+#'                             ConstrastList)
+#'    myDGEobj <- runContrasts(myDGEobj,
+#'                             myFitName,
+#'                             ConstrastList,
+#'                             runTopTable = TRUE
+#'                             runTopTreat = TRUE,
+#'                             foldChangeThreshold = 1.25)
+#' }
 #'
 #' @import magrittr
 #' @importFrom limma contrasts.fit eBayes makeContrasts topTable topTreat treat
@@ -62,132 +67,143 @@
 #' @importFrom stringr str_c
 #'
 #' @export
-runContrasts <- function(dgeObj, designMatrixName,
+runContrasts <- function(dgeObj,
+                         designMatrixName,
                          contrastList,
                          contrastSetName = fitName,
                          runTopTable = TRUE,
                          runTopTreat = FALSE,
-                         FoldChangeThreshold = 1.5,
-                         PvalueThreshold=0.01,
-                         FDRthreshold=0.1,
+                         foldChangeThreshold = 1.5,
+                         pValueThreshold = 0.01,
+                         FDRthreshold = 0.1,
                          runEBayes = TRUE,
                          robust = TRUE,
-                         proportion=0.01,
-                         Qvalue=FALSE,
-                         IHW=FALSE,
-                         verbose=FALSE) {
+                         proportion = 0.01,
+                         qValue = FALSE,
+                         IHW = FALSE,
+                         verbose = FALSE) {
 
-  assertthat::assert_that (!missing(dgeObj),
-                           !missing(designMatrixName),
-                           !missing(contrastList),
-                           class(dgeObj)[[1]] == "DGEobj",
-                           class(contrastList)[[1]] == "list",
-                           FoldChangeThreshold >=0,
-                           !is.null(names(contrastList)),
-                           PvalueThreshold > 0 & PvalueThreshold <= 1,
-                           !(runTopTable == FALSE & runTopTreat == FALSE)
-  )
+    assertthat::assert_that(!missing(dgeObj),
+                            "DGEobj" %in% class(dgeObj),
+                            msg = "dgeObj must be specified and should be of class 'DGEobj'.")
+    assertthat::assert_that(!missing(designMatrixName),
+                            msg = "designMatrixName must be specified.")
+    assertthat::assert_that("list" %in% class(contrastList),
+                            !missing(contrastList),
+                            !is.null(names(contrastList)),
+                            msg = "contrastList must specified and must be a named list.")
+    assertthat::assert_that(foldChangeThreshold >= 0,
+                            msg = "foldChangeThreshold must be greater than or equal to 0.")
+    assertthat::assert_that(pValueThreshold > 0 & pValueThreshold <= 1,
+                            msg = "pValueThreshold must be between 0 and 1.")
+    assertthat::assert_that(!(runTopTable == FALSE & runTopTreat == FALSE),
+                            msg = "One of runTopTable or runTopTreat must be TRUE.")
+    assertthat::assert_that(designMatrixName %in% names(dgeObj),
+                            msg = "The specified designMatrixName not found in dgeObj.")
+    fitName <- paste(designMatrixName, "_fit", sep = "")
+    assertthat::assert_that(fitName %in% names(dgeObj),
+                            msg = "The specified fitName object not found in dgeObj.")
 
-  funArgs <- match.call() #capture arguments
+    funArgs <- match.call()
 
-  #need to retrieve designMatrix
-  designMatrix <- try({getItem(dgeObj, designMatrixName)}, silent=TRUE)
-  if (class(designMatrix) == "try-error")
-    stop(paste("Couldn't find", designMatrixName, "in dgeObj.", sep=" "))
+    # Retrieve designMatrix & fit
+    designMatrix <- DGEobj::getItem(dgeObj, designMatrixName)
+    fit <- DGEobj::getItem(dgeObj, fitName)
 
-  fitName <- paste(designMatrixName, "_fit", sep="")
-  fit <- try((getItem(dgeObj, fitName)), silent=TRUE)
-  if (class(fit) == "try-error") {
-    stop(paste(fitName, "not found in dgeObj", sep=" "))
-  }
+    # Run the contrast fit
+    ContrastMatrix <- limma::makeContrasts(contrasts = names(contrastList), levels = designMatrix)
+    MyFit.Contrasts <- limma::contrasts.fit(fit, ContrastMatrix)
 
-  #run the contrast fit
-  ContrastMatrix <- limma::makeContrasts (contrasts=contrastList, levels=designMatrix)
-  MyFit.Contrasts <- limma::contrasts.fit(fit, ContrastMatrix)
-
-  #run eBayes
-  if (runEBayes) {
-    if (verbose == TRUE) tsmsg(stringr::str_c("running EBayes: proportion = ", proportion))
-    MyFit.Contrasts = limma::eBayes(MyFit.Contrasts, robust=robust, proportion=proportion)
-    MyFit.Contrasts.treat = limma::treat(MyFit.Contrasts, lfc=log2(FoldChangeThreshold),
-                                  robust=robust)
-  }
-
-  #run topTable on each contrast and add each DF to a list
-
-  if (runTopTable == TRUE){
-    if (verbose == TRUE) tsmsg("Running topTable...")
-    #Run topTable via lapply to generate a bunch of contrasts.
-    MyCoef = 1:length(contrastList) %>% as.list
-    TopTableList = lapply (MyCoef, function(x) (limma::topTable(MyFit.Contrasts, coef=x,
-                              confint=T, number=Inf, p.value=1, sort.by="none")))
-
-    #transfer the contrast names
-    names(TopTableList) = names(contrastList)
-
-    if (Qvalue == TRUE){
-        TopTableList <- runQvalue(TopTableList)
+    # Run eBayes
+    if (runEBayes) {
+        if (verbose == TRUE) {
+            .tsmsg(stringr::str_c("running EBayes: proportion = ", proportion))
+        }
+        MyFit.Contrasts = limma::eBayes(MyFit.Contrasts, robust = robust, proportion = proportion)
+        MyFit.Contrasts.treat = limma::treat(MyFit.Contrasts, lfc = log2(foldChangeThreshold),
+                                             robust = robust)
     }
-    if (IHW == TRUE){
-        IHW_result <- runIHW(TopTableList)
-        TopTableList <- IHW_result[[1]]
+
+    # Run topTable on each contrast and add each DF to a list
+    if (runTopTable == TRUE) {
+        if (verbose == TRUE) {
+            .tsmsg("Running topTable...")
+        }
+        # Run topTable via lapply to generate a bunch of contrasts.
+        MyCoef <- 1:length(contrastList) %>% as.list
+        topTableList <- lapply(MyCoef, function(x) (limma::topTable(MyFit.Contrasts, coef = x,
+                                                                    confint = T, number = Inf, p.value = 1, sort.by = "none")))
+
+        # Transfer the contrast names
+        names(topTableList) = names(contrastList)
+
+        if (qValue == TRUE) {
+            topTableList <- runQvalue(topTableList)
+        }
+        if (IHW == TRUE) {
+            IHW_result <- runIHW(topTableList)
+            topTableList <- IHW_result[[1]]
+        }
     }
-  }
 
-  if (runTopTreat == TRUE) {
-    if (verbose == TRUE) tsmsg("Running topTreat...")
-    #Run topTreat via lapply to generate a bunch of contrasts.
-    LFC = log2(FoldChangeThreshold)
-    MyCoef = 1:length(contrastList) %>% as.list
-    TopTreatList = lapply (MyCoef, function(x) (limma::topTreat(MyFit.Contrasts.treat, coef=x,
-                                  confint=T, lfc=LFC, number=Inf, p.value=1, sort.by="none")))
-    #transfer the contrast names
-    names(TopTreatList) = names(contrastList)
-  }
+    if (runTopTreat == TRUE) {
+        if (verbose == TRUE) {
+            .tsmsg("Running topTreat...")
+        }
+        # Run topTreat via lapply to generate a bunch of contrasts.
+        LFC = log2(foldChangeThreshold)
+        MyCoef = 1:length(contrastList) %>% as.list
+        topTreatList = lapply(MyCoef, function(x) (limma::topTreat(MyFit.Contrasts.treat, coef = x,
+                                                                   confint = T, lfc = LFC, number = Inf, p.value = 1, sort.by = "none")))
+        # Transfer the contrast names
+        names(topTreatList) = names(contrastList)
+    }
 
-#capture the contrastMatrix, MyFit.Contrasts and the contrast DFs
+    # Capture the contrast matrix
+    dgeObj <- DGEobj::addItem(dgeObj,
+                              item = ContrastMatrix,
+                              itemName = paste(contrastSetName, "_cm", sep = ""),
+                              itemType = "contrastMatrix",
+                              funArgs = funArgs,
+                              parent = fitName)
 
- #put results into the dgeobj
- #capture the contrast matrix
-  dgeObj <- DGEobj::addItem(dgeObj, item=ContrastMatrix,
-                            itemName=paste(contrastSetName, "_cm", sep=""),
-                            itemType="contrastMatrix", funArgs=funArgs,
-                            parent=fitName)
+    if (runTopTable) {
+        # Add the contrast fit
+        dgeObj <- DGEobj::addItem(dgeObj,
+                                  item = MyFit.Contrasts,
+                                  itemName = paste(contrastSetName, "_cf", sep = ""),
+                                  itemType = "contrast_fit",
+                                  funArgs = funArgs,
+                                  parent = fitName)
 
+        # Add the topTable DFs
+        listNames <- names(topTableList)
+        for (i in 1:length(topTableList))
+            dgeObj <- DGEobj::addItem(dgeObj,
+                                      item = topTableList[[i]],
+                                      itemName = listNames[[i]],
+                                      itemType = "topTable",
+                                      funArgs = funArgs,
+                                      parent = paste(contrastSetName, "_cf", sep = ""))
+    }
 
- if (runTopTable){
-    #add the contrast fit
-   dgeObj <- DGEobj::addItem(dgeObj, item=MyFit.Contrasts,
-                             itemName=paste(contrastSetName, "_cf", sep=""),
-                             itemType="contrast_fit",
-                             funArgs=funArgs,
-                             parent=fitName)
+    if (runTopTreat) {
+        dgeObj <- DGEobj::addItem(dgeObj,
+                                  item = MyFit.Contrasts.treat,
+                                  itemName = paste(contrastSetName, "_cft", sep = ""),
+                                  itemType = "contrast_fit_treat",
+                                  funArgs = funArgs,
+                                  parent = fitName)
 
-    #add the topTable DFs
-    listNames <- names(TopTableList)
-    for (i in 1:length(TopTableList))
-      dgeObj <- DGEobj::addItem(dgeObj, item=TopTableList[[i]],
-                                itemName=listNames[[i]],
-                                itemType="topTable", funArgs=funArgs,
-                                parent=paste(contrastSetName, "_cf", sep=""))
- }
+        listNames <- names(topTreatList)
+        for (i in 1:length(topTreatList))
+            dgeObj <- DGEobj::addItem(dgeObj,
+                                      item = topTreatList[[i]],
+                                      itemName = paste(listNames[i], "_treat", sep = ""),
+                                      itemType = "topTreat",
+                                      funArgs = funArgs,
+                                      parent = paste(contrastSetName, "_cft", sep = ""))
+    }
 
- if (runTopTreat){
-   dgeObj <- DGEobj::addItem(dgeObj, item=MyFit.Contrasts.treat,
-                             itemName=paste(contrastSetName, "_cft", sep=""),
-                             itemType="contrast_fit_treat",
-                             funArgs=funArgs,
-                             parent=fitName)
-
-    listNames <- names(TopTreatList)
-    for (i in 1:length(TopTreatList))
-      dgeObj <- DGEobj::addItem(dgeObj, item=TopTreatList[[i]],
-                                itemName=paste(listNames[i], "_treat", sep=""),
-                                itemType="topTreat", funArgs=funArgs,
-                                parent=paste(contrastSetName, "_cft", sep=""))
- }
-
- return(dgeObj)
+    return(dgeObj)
 }
-
-

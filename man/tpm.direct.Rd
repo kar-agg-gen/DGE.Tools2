@@ -2,38 +2,33 @@
 % Please edit documentation in R/convertCounts.R
 \name{tpm.direct}
 \alias{tpm.direct}
-\title{Function tpm.direct}
+\title{Convert counts and geneLength to TPM units}
 \usage{
-tpm.direct(counts, genelength, collapse = FALSE)
+tpm.direct(counts, geneLength, collapse = FALSE)
 }
 \arguments{
-\item{counts}{A numeric matrix of N genes x M Samples.  All columns
-must be numeric.}
+\item{counts}{A numeric matrix of N genes x M samples. All columns must be numeric.}
 
-\item{collapse}{T/F determines whether to use rowMeans on the genelength matrix [Default = FALSE]}
+\item{geneLength}{Numeric matrix of gene lengths. Often the ExonLength item of a DGEobj.}
 
-\item{geneLength}{A vector or matrix of gene lengths.}
+\item{collapse}{Default = FALSE. TRUE or FALSE determines whether to use rowMeans on the geneLength matrix.}
 }
 \value{
 A matrix of TPM values
 }
 \description{
-Takes a counts and genelength as input and converts to tpm units using the equation from
+Takes a counts and geneLength as input and converts to TPM units using the equation from
 [Harold Pimental](https://haroldpimentel.wordpress.com/2014/05/08/what-the-fpkm-a-review-rna-seq-expression-units/).
 }
 \details{
-The result should be the same as using convertCounts with normalize='tpm' and log=FALSE
+The result should be the same as using convertCounts with normalize = 'tpm' and log = FALSE.
 
-Genelength can be a vector (length == nrow(counts) or a matrix (same dim as counts).
-The genelength is used as is, or optionally collapsed to a vector by rowMeans.
+geneLength can be a vector (length == nrow(counts)) or a matrix (same dim as counts).
+The geneLength is used as is, or optionally collapsed to a vector by rowMeans.
 }
 \examples{
-myTPM <- tpm.classic(mycounts, mygenelength)
+\dontrun{
+  myTPM <- tpm.direct(myCounts, myGeneLength)
+}
 
 }
-\author{
-John Thompson, \email{john.thompson@bms.com}
-}
-\keyword{RNA-Seq,}
-\keyword{conversion}
-\keyword{unit}
