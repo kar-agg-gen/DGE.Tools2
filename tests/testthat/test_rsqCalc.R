@@ -2,6 +2,8 @@ context("DGEtools - tests for rsqCalc.R functions")
 
 
 test_that("rsqCalc.R: rsqCalc()", {
+    skip_if(suppressWarnings(is.null(DGEobj1$DGEList)))
+
     dgelist <- getItem(DGEobj1, "DGEList")
     log2cpm <- cpm(dgelist, log = TRUE)
     rsq <- rsqCalc(log2cpm, DGEobj1$RG_fit)

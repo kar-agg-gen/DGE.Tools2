@@ -2,6 +2,8 @@ context("DGEtools - tests for runQvalue.R functions")
 
 
 test_that("runQvalue.R: runQvalue()", {
+    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+
     contrast_list <- getType(DGEobj1, "topTable")
     contrast_list_with_qvalue <- runQvalue(contrastList = contrast_list)
     expect_type(contrast_list_with_qvalue, "list")

@@ -2,6 +2,8 @@ context("DGEtools - tests for runSVA.R functions")
 
 
 test_that("runSVA.R: runSVA()", {
+    skip_if(is.null(DGEobj1$RG))
+
     dgeObj_sva <- runSVA(dgeObj = DGEobj1, designMatrixName = "RG", saveSv = TRUE)
     expect_s3_class(dgeObj_sva, "DGEobj")
     expect_true(file.exists("svobj.RDS"))
