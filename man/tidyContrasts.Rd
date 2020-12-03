@@ -37,7 +37,7 @@ The contrast names will be used as a new column in the tidy output format.
   myMergedTidyDF <- tidyContrasts(myDGEobj)
 
   # Assemble a list of contrasts from two DGEobjs; just logFC and conf intervals
-  myContrasts <- c(getType(DGEobj1, "topTable"), getType(DGEobj2, "topTable"))
+  myContrasts <- c(getType(t_obj1, "topTable"), getType(DGEobj2, "topTable"))
   myMergedTidyDF <- tidyContrasts(myContrasts, includeColumns = c("logFC", "CI.R", "CI.L"))
 }
 

@@ -2,7 +2,7 @@ context("DGEtools - tests for extractCol.R functions")
 
 test_that('extractCol: extractCol()', {
 
-    extractCol_ttList <- getType(DGEobj1, "topTable")[1:2]
+    extractCol_ttList <- getType(t_obj1, "topTable")[1:2]
     extractCol_one_test <- extractCol(extractCol_ttList, colName = "P.Value")
 
     expect_true(is.data.frame(extractCol_one_test))

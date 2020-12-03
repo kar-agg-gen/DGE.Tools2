@@ -3,7 +3,7 @@ context("DGEtools - tests for runEdgeRNorm.R functions")
 
 test_that('runEdgeRNorm: runEdgeRNorm()', {
 
-    DGEobj1_minus_DGElist <- rmItem(DGEobj1, "DGEList")
+    DGEobj1_minus_DGElist <- rmItem(t_obj1, "DGEList")
 
     runEdgeRNorm_one_test <- runEdgeRNorm(DGEobj1_minus_DGElist, plotFile = NULL)
     runEdgeRNorm_one_test_DGEList <- getType(runEdgeRNorm_one_test, "DGEList")

@@ -3,7 +3,7 @@ context("DGEtools - tests for profilePlot.R functions")
 
 test_that("profilePlot.R: profilePlot()", {
 
-    df <- topTable(DGEobj1$RG_fit, number = 100)
+    df <- topTable(t_obj1$RG_fit, number = 100)
     profile_plot <- profilePlot(df, logRatioCol = "adj.P.Val")
     expect_s3_class(profile_plot, c("gg", "ggplot"))
 

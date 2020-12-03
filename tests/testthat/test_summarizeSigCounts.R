@@ -3,7 +3,7 @@ context("DGEtools - tests for summarizeSigCounts.R functions")
 
 test_that('summarizeSigCounts.R: summarizeSigCounts()', {
 
-    myTopTables <- getType(DGEobj1, "topTable")
+    myTopTables <- getType(t_obj1, "topTable")
     summarizedSigCounts <- summarizeSigCounts(myTopTables)
 
     expect_true(is.matrix(summarizedSigCounts))

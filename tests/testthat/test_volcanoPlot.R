@@ -3,7 +3,7 @@ context("DGEtools - tests for volcanoPlot.R functions")
 
 test_that("volcanoPlot.R: volcanoPlot()", {
 
-    df <- topTable(DGEobj1$RG_fit, number = 100)
+    df <- topTable(t_obj1$RG_fit, number = 100)
     volcano_plot <- volcanoPlot(df, logRatioCol = "adj.P.Val")
     expect_s3_class(volcano_plot, c("gg","ggplot"))
 

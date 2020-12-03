@@ -2,7 +2,7 @@ context("DGEtools - tests for runVoom.R functions")
 
 
 test_that('runVoom.R: runVoom()', {
-    dgeObj <- DGEobj1
+    dgeObj <- t_obj1
     design <- getItem(dgeObj, "design")
     designMatrix <- model.matrix(~ 0 + ReplicateGroup, design)
     dgeObj <- addItem(dgeObj   = dgeObj,

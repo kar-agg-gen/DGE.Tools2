@@ -3,7 +3,7 @@ context("DGEtools - tests for runIHW.R functions")
 
 test_that('runIHW: runIHW()', {
 
-    runIHW_ttList <- getType(DGEobj1, "topTable")[1:2]
+    runIHW_ttList <- getType(t_obj1, "topTable")[1:2]
 
     runIHW_test_one <- runIHW(runIHW_ttList)
 
