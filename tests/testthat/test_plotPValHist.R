@@ -2,7 +2,7 @@ context("DGEtools - tests for plotPValHist.R functions")
 
 
 test_that("plotPValHist.R: plotPvalHist()", {
-    skip_if(suppressWarnings(is.null(DGEobj1$DGEList)))
+    suppressWarnings(skip_if(is.null(DGEobj1$DGEList)))
 
     # testing plotPvalHist with savePlot and facet = TRUE
     pvalMatrix <- extractCol(getType(DGEobj1, "topTable"), "P.Value")

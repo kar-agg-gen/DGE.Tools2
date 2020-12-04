@@ -2,7 +2,7 @@ context("DGEtools - tests for runIHW.R functions")
 
 
 test_that('runIHW: runIHW()', {
-    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
 
     runIHW_ttList <- getType(DGEobj1, "topTable")[1:2]
 

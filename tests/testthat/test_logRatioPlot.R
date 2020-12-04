@@ -2,7 +2,7 @@ context("DGEtools - tests for logRatioPlot.R functions")
 
 
 test_that("logRatioPlot.R: logRatioPlot()", {
-    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
 
     tidyDat <- tidyContrasts(DGEobj1,
                              rownameColumn = "EnsgID",

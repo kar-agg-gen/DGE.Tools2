@@ -1,7 +1,7 @@
 context("DGEtools - tests for extractCol.R functions")
 
 test_that('extractCol: extractCol()', {
-    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
 
     extractCol_ttList <- getType(DGEobj1, "topTable")[1:2]
     extractCol_one_test <- extractCol(extractCol_ttList, colName = "P.Value")

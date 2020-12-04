@@ -2,7 +2,7 @@ context("DGEtools - tests for runVoom.R functions")
 
 
 test_that('runVoom.R: runVoom()', {
-    skip_if(suppressWarnings(is.null(DGEobj1$DGEList)))
+    suppressWarnings(skip_if(is.null(DGEobj1$DGEList)))
 
     dgeObj <- DGEobj1
     design <- getItem(dgeObj, "design")

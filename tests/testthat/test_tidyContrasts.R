@@ -2,7 +2,7 @@ context("DGEtools - tests for tidyContrasts.R functions")
 
 
 test_that('tidyContrasts: tidyContrasts()', {
-    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
 
     tidyContrast_one_test <- tidyContrasts(DGEobj1)
 

@@ -2,7 +2,7 @@ context("DGEtools - tests for runContrasts.R functions")
 
 
 test_that('runContrasts.R: runContrasts()', {
-    skip_if(suppressWarnings(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
     skip_if(is.null(DGEobj1$RG))
 
     dgeObj <- DGEobj1
