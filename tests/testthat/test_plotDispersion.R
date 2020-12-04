@@ -2,7 +2,7 @@ context("DGEtools - tests for plotDispersion.R functions")
 
 
 test_that("plotDispersion.R: plotDispersion()", {
-    suppressWarnings(skip_if(is.null(DGEobj1$DGEList)))
+    skip_if(is.null(DGEobj1$DGEList))
 
     # creating designMatrix and designlist
     dgelist <- DGEobj1$DGEList

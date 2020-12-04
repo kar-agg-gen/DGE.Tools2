@@ -2,7 +2,7 @@ context("DGEtools - tests for rsqCalc.R functions")
 
 
 test_that("rsqCalc.R: rsqCalc()", {
-    suppressWarnings(skip_if(is.null(DGEobj1$DGEList)))
+    skip_if(is.null(DGEobj1$DGEList))
 
     dgelist <- getItem(DGEobj1, "DGEList")
     log2cpm <- cpm(dgelist, log = TRUE)
