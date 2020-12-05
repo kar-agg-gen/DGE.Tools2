@@ -3,7 +3,7 @@ context("DGEtools - tests for runEdgeRNorm.R functions")
 
 test_that('runEdgeRNorm: runEdgeRNorm()', {
 
-    runEdgeRNorm_one_test <- runEdgeRNorm(DGEobj1, plotFile = NULL)
+    runEdgeRNorm_one_test <- runEdgeRNorm(DGEobj1, plotFile = FALSE)
     runEdgeRNorm_one_test_DGEList <- getType(runEdgeRNorm_one_test, "DGEList")
 
     expect_s3_class(runEdgeRNorm_one_test, "DGEobj")
@@ -11,7 +11,7 @@ test_that('runEdgeRNorm: runEdgeRNorm()', {
     expect_equal(length(runEdgeRNorm_one_test_DGEList$DGEList), 2)
     expect_equal(names(runEdgeRNorm_one_test_DGEList$DGEList), c("counts", "samples"))
 
-    runEdgeRNorm_two_test <- runEdgeRNorm(DGEobj1, normMethod = "RLE", plotFile = NULL)
+    runEdgeRNorm_two_test <- runEdgeRNorm(DGEobj1, normMethod = "RLE", plotFile = TRUE)
     runEdgeRNorm_two_test_DGEList <- getType(runEdgeRNorm_two_test, "DGEList")
 
     expect_s3_class(runEdgeRNorm_two_test, "DGEobj")

@@ -2,6 +2,8 @@ context("DGEtools - tests for voomWorkflow.R functions")
 
 
 test_that('voomWorkflow.R: voomWorkflow()', {
+    skip_if(is.null(DGEobj1$DGEList))
+
     dgeObj <- DGEobj1
     design <- getItem(dgeObj, "design")
     designMatrix <- model.matrix(~ 0 + ReplicateGroup, design)
