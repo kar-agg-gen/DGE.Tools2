@@ -2,6 +2,7 @@ context("DGEtools - tests for profilePlot.R functions")
 
 
 test_that("profilePlot.R: profilePlot()", {
+    skip_if(!("RG_fit" %in% names(t_obj1)))
 
     df <- topTable(t_obj1$RG_fit, number = 100)
     profile_plot <- profilePlot(df, logRatioCol = "adj.P.Val")

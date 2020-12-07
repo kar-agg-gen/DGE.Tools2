@@ -2,6 +2,8 @@ context("DGEtools - tests for comparePlot.R functions")
 
 
 test_that("comparePlot.R: comparePlot()", {
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+
     ttList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
     compareDat <- comparePrep(ttList)
@@ -36,6 +38,8 @@ test_that("comparePlot.R: comparePlot()", {
 })
 
 test_that("comparePlot.R: comparePrep()", {
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+
     ttList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
     compareDat <- comparePrep(ttList)

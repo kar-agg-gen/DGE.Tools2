@@ -2,6 +2,8 @@ context("DGEtools - tests for logRatioPlot.R functions")
 
 
 test_that("logRatioPlot.R: logRatioPlot()", {
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+
     tidyDat <- tidyContrasts(t_obj1,
                              rownameColumn = "EnsgID",
                              includeColumns = c("logFC", "CI.R", "CI.L"))

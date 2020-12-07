@@ -2,6 +2,8 @@ context("DGEtools - tests for runVoom.R functions")
 
 
 test_that('runVoom.R: runVoom()', {
+   skip_if(is.null(t_obj1$DGEList))
+
     dgeObj <- t_obj1
     design <- getItem(dgeObj, "design")
     designMatrix <- model.matrix(~ 0 + ReplicateGroup, design)

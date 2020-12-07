@@ -2,6 +2,7 @@ context("DGEtools - tests for topTable.merge.R functions")
 
 
 test_that("topTable.merge.R: topTable.merge()", {
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
     # creating toptables list
     ttList         <- getType(t_obj1, "topTable")
