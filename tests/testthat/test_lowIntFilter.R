@@ -2,11 +2,12 @@ context("DGEtools - tests for lowIntFilter.R functions")
 
 
 test_that('lowIntFilter: lowIntFilter()', {
+    skip_if(is.null(getItem(DGEobj1, "geneData")$ExonLength))
 
     lowIntFilter_one_test <- lowIntFilter(DGEobj1, countThreshold = 10)
 
     expect_s3_class(lowIntFilter_one_test, "DGEobj")
-    expect_equal(nrow(lowIntFilter_one_test$counts), 11622)
+    expect_equal(nrow(lowIntFilter_one_test$counts), 443)
 
     lowIntFilter_two_test <- lowIntFilter(DGEobj1, zfpkmThreshold = -3.0)
 
