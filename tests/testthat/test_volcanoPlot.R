@@ -2,6 +2,7 @@ context("DGEtools - tests for volcanoPlot.R functions")
 
 
 test_that("volcanoPlot.R: volcanoPlot()", {
+    skip_if(is.null(DGEobj1$RG_fit))
 
     df <- topTable(DGEobj1$RG_fit, number = 100)
     volcano_plot <- volcanoPlot(df, logRatioCol = "adj.P.Val")
