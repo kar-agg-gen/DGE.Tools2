@@ -38,11 +38,6 @@ test_that('runContrasts.R: runContrasts()', {
     expect_error(runContrasts(dgeObj              = dgeObj,
                               designMatrixName    = "RG",
                               contrastList        = contrastList,
-                              pValueThreshold     = 2),
-                 regexp = "pValueThreshold must be between 0 and 1.")
-    expect_error(runContrasts(dgeObj              = dgeObj,
-                              designMatrixName    = "RG",
-                              contrastList        = contrastList,
                               runTopTable         = FALSE,
                               runTopTreat         = FALSE),
                  regexp = "One of runTopTable or runTopTreat must be TRUE.")
