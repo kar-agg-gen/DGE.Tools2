@@ -4,11 +4,11 @@ context("DGEtools - tests for plotNorm.R functions")
 test_that("plotNorm.R: plotNorm()", {
 
     # testing with DGEobj and plotType - box
-    norm_plot <- plotNorm(DGEobj1$counts, plotType = "box")
+    expect_warning({norm_plot <- plotNorm(DGEobj1$counts, plotType = "box")})
     expect_s3_class(norm_plot, c("gg", "ggplot"))
 
     # testing with count matrix and plotType - density
-    norm_plot <- plotNorm(DGEobj1, plotType = "density")
+    expect_warning({norm_plot <- plotNorm(DGEobj1, plotType = "density")})
     expect_s3_class(norm_plot, c("gg", "ggplot"))
 
     # testing assert statements

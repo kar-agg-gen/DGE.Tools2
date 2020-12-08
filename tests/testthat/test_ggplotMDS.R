@@ -2,6 +2,9 @@ context("DGEtools - tests for ggplotMDS.R functions")
 
 
 test_that("ggplotMDS.R: ggplotMDS()", {
+    skip_if(is.null(DGEobj1$DGEList))
+    skip_if(is.null(DGEobj1$design$Barcode))
+
     mds_plot <- ggplotMDS(DGEdata = DGEobj1,
                           colorBy = DGEobj1$design$Barcode)
     expect_length(mds_plot, 2)
@@ -58,6 +61,9 @@ test_that("ggplotMDS.R: ggplotMDS()", {
 })
 
 test_that("ggplotMDS.R: MDS_var_explained()", {
+    skip_if(is.null(DGEobj1$DGEList))
+    skip_if(is.null(DGEobj1$design$Barcode))
+
     mds_plot <- ggplotMDS(DGEdata = DGEobj1,
                           colorBy = DGEobj1$design$Barcode)
     var_result <- MDS_var_explained(mds_plot$mdsobj)

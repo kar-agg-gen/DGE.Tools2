@@ -2,6 +2,7 @@ context("DGEtools - tests for convertCounts.R functions")
 
 
 test_that("convertCounts.R: convertCounts()", {
+    skip_if(is.null(getItem(DGEobj1, "geneData")$ExonLength))
 
     # CPM
     count_matrix <- convertCounts(counts      = DGEobj1$counts_orig,
@@ -44,6 +45,13 @@ test_that("convertCounts.R: convertCounts()", {
 )
 
 test_that("convertCounts.R: tpm.on.subset()", {
+    geneLength <- NULL
+    if (attr(DGEobj1, "source") == "Omicsoft") {
+        geneLength <- getItem(DGEobj1, "geneData")$ExonLength
+    } else if ("effectiveLength_orig" %in% names(DGEobj1)) {
+        geneLength <- rowMeans(getItem(DGEobj1, "effectiveLength_orig"), na.rm = TRUE)
+    }
+    skip_if(is.null(geneLength))
 
     # testing level isoform
     isoform_dgeObj <- DGEobj1
@@ -69,6 +77,8 @@ test_that("convertCounts.R: tpm.on.subset()", {
 })
 
 test_that("convertCounts.R: tpm.direct()", {
+    skip_if(is.null(getItem(DGEobj1, "geneData")$ExonLength))
+
     genelength <- getItem(DGEobj1, "geneData")$ExonLength
     tpmObj <- tpm.direct(DGEobj1$counts, geneLength = genelength)
     expect_true("matrix" %in% class(tpmObj))

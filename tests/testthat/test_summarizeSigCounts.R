@@ -2,6 +2,7 @@ context("DGEtools - tests for summarizeSigCounts.R functions")
 
 
 test_that('summarizeSigCounts.R: summarizeSigCounts()', {
+    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
 
     myTopTables <- getType(DGEobj1, "topTable")
     summarizedSigCounts <- summarizeSigCounts(myTopTables)

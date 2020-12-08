@@ -2,6 +2,8 @@ context("DGEtools - tests for checkSex.R functions")
 
 
 test_that("checkSex.R: checkSex()", {
+    skip_if_not("Chromosome" %in% names(DGEobj::getItem(DGEobj1, "geneData_orig")))
+
     # testing for species rat
     sex_determination_plot <- checkSex(dgeObj  = DGEobj1,
                                        species = "RAT")
