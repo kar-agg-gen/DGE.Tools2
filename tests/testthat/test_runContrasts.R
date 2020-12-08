@@ -2,11 +2,11 @@ context("DGEtools - tests for runContrasts.R functions")
 
 
 test_that('runContrasts.R: runContrasts()', {
-    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
-    skip_if(is.null(DGEobj1$RG))
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
+    skip_if(is.null(t_obj1$RG))
 
-    dgeObj <- DGEobj1
-    contrastList <- getType(DGEobj1, "topTable")
+    dgeObj <- t_obj1
+    contrastList <- getType(dgeObj, "topTable")
     names(contrastList) <- colnames(dgeObj$RG)[-1]
 
     dgeObj_output <- runContrasts(dgeObj              = dgeObj,
