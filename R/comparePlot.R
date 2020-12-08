@@ -78,13 +78,13 @@
 #' @examples
 #' \dontrun{
 #'   # Retrieve the first two contrasts from a DGEobj as a list of dataframes (length = 2; named items)
-#'   ttList <- getType(DGEobj, "topTable")[1:2]
+#'   contrastList <- getType(DGEobj, "topTable")[1:2]
 #'
 #'   # Capture the default logFC and P.Value
-#'   compareDat <- comparePrep(ttList)
+#'   compareDat <- comparePrep(contrastList)
 #'
 #'   # Switch to an FDR value for the significance measure
-#'   compareDat <- comparePrep(ttList, significanceCol = "adj.P.Val")
+#'   compareDat <- comparePrep(contrastList, significanceCol = "adj.P.Val")
 #'
 #'   # Draw the plot
 #'   cPlot <- comparePlot(compareDat, title = "Plot Title")
@@ -302,7 +302,7 @@ comparePlot <- function(df,
 #' (present in both datasets). The two dataframes must have the same type of
 #' gene IDs as rownames.
 #'
-#' @param ttList A named list of 2 topTable dataframes (Required). The
+#' @param contrastList A named list of 2 topTable dataframes (Required). The
 #'   names are used as column names for the value columns in the output.
 #' @param valueCol Name of column containing values to plot (Default = "logFC")
 #' @param significanceCol Name of column to use for significance (Default = "P.Value")
@@ -314,13 +314,13 @@ comparePlot <- function(df,
 #' @examples
 #' \dontrun{
 #'   # Retrieve the 1st two contrasts from a DGEobj
-#'   ttList <- getType(dgeObj, "topTable")[1:2]
+#'   contrastList <- getType(dgeObj, "topTable")[1:2]
 #'
 #'   # Capture the default logFC and P.Value
-#'   compareDat <- comparePrep(ttList)
+#'   compareDat <- comparePrep(contrastList)
 #'
 #'   # Switch to an FDR value for the significance measure
-#'   compareDat <- comparePrep(ttList, significanceCol="adj.P.Val")
+#'   compareDat <- comparePrep(contrastList, significanceCol="adj.P.Val")
 #'
 #'   # Draw the plot
 #'   cPlot <- comparePlot(compareDat)
@@ -330,29 +330,29 @@ comparePlot <- function(df,
 #' @import magrittr
 #'
 #' @export
-comparePrep <- function(ttList,
+comparePrep <- function(contrastList,
                         valueCol = "logFC",
                         significanceCol = "P.Value"){
 
-    assertthat::assert_that(length(ttList) == 2,
-                            !is.null(names(ttList)),
-                            "data.frame" %in% class(ttList[[1]]),
-                            "data.frame" %in% class(ttList[[2]]),
-                            msg = "ttList must be a named list of length 2 where both items are of class 'data.frame'.")
-    assertthat::assert_that(valueCol %in% colnames(ttList[[1]]),
-                            valueCol %in% colnames(ttList[[2]]),
-                            msg = "The valueCol must be included in the colnames of both items of ttList.")
-    assertthat::assert_that(significanceCol %in% colnames(ttList[[1]]),
-                            significanceCol %in% colnames(ttList[[2]]),
-                            msg = "The significanceCol must be included in the colnames of both items of ttList.")
+    assertthat::assert_that(length(contrastList) == 2,
+                            !is.null(names(contrastList)),
+                            "data.frame" %in% class(contrastList[[1]]),
+                            "data.frame" %in% class(contrastList[[2]]),
+                            msg = "contrastList must be a named list of length 2 where both items are of class 'data.frame'.")
+    assertthat::assert_that(valueCol %in% colnames(contrastList[[1]]),
+                            valueCol %in% colnames(contrastList[[2]]),
+                            msg = "The valueCol must be included in the colnames of both items of contrastList.")
+    assertthat::assert_that(significanceCol %in% colnames(contrastList[[1]]),
+                            significanceCol %in% colnames(contrastList[[2]]),
+                            msg = "The significanceCol must be included in the colnames of both items of contrastList.")
 
-    ttNames <- names(ttList)
-    tt1 <- ttList[[1]]
-    tt2 <- ttList[[2]]
+    ttNames <- names(contrastList)
+    tt1 <- contrastList[[1]]
+    tt2 <- contrastList[[2]]
 
     commonIDs <- intersect(rownames(tt1), rownames(tt2))
     assertthat::assert_that(!length(commonIDs) < 1,
-                            msg = "No common gene IDs were found between the two dataframes in ttList.")
+                            msg = "No common gene IDs were found between the two dataframes in contrastList.")
 
     # Filter both tables to the same set of genes in the same order
     tt1 %<>% rownames_to_column(var = "geneid") %>%
@@ -363,7 +363,7 @@ comparePrep <- function(ttList,
         dplyr::arrange(geneid)
 
     assertthat::assert_that(all(tt1$geneid == tt2$geneid),
-                            msg = "Gene IDs in the two topTable files in ttList are not identical.")
+                            msg = "Gene IDs in the two topTable files in contrastList are not identical.")
 
     # Assemble the return df
     df <- dplyr::bind_cols(fc1 = tt1[[valueCol]],

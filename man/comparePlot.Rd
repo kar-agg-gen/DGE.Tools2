@@ -134,13 +134,13 @@ values are used.
 \examples{
 \dontrun{
   # Retrieve the first two contrasts from a DGEobj as a list of dataframes (length = 2; named items)
-  ttList <- getType(DGEobj, "topTable")[1:2]
+  contrastList <- getType(DGEobj, "topTable")[1:2]
 
   # Capture the default logFC and P.Value
-  compareDat <- comparePrep(ttList)
+  compareDat <- comparePrep(contrastList)
 
   # Switch to an FDR value for the significance measure
-  compareDat <- comparePrep(ttList, significanceCol = "adj.P.Val")
+  compareDat <- comparePrep(contrastList, significanceCol = "adj.P.Val")
 
   # Draw the plot
   cPlot <- comparePlot(compareDat, title = "Plot Title")
