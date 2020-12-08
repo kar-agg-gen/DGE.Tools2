@@ -2,9 +2,9 @@ context("DGEtools - tests for comparePlot.R functions")
 
 
 test_that("comparePlot.R: comparePlot()", {
-    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    ttList <- getType(DGEobj1, "topTable")[1:2]
+    ttList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
     compareDat <- comparePrep(ttList)
 
@@ -29,7 +29,7 @@ test_that("comparePlot.R: comparePlot()", {
     # testing assert statement
     expect_error(comparePlot(compareDat[, 1, drop = FALSE]),
                  regexp = "Need at least two numeric columns in df.")
-    expect_error(comparePlot(DGEobj1$design),
+    expect_error(comparePlot(t_obj1$design),
                  regexp = "Need at least two numeric columns in df.")
 
     # failing function with Symbol argument length < 4
@@ -38,9 +38,9 @@ test_that("comparePlot.R: comparePlot()", {
 })
 
 test_that("comparePlot.R: comparePrep()", {
-    suppressWarnings(skip_if(is.null(getType(DGEobj1, "topTable"))))
+    suppressWarnings(skip_if(is.null(getType(t_obj1, "topTable"))))
 
-    ttList <- getType(DGEobj1, "topTable")[1:2]
+    ttList <- getType(t_obj1, "topTable")[1:2]
     # Capture the default logFC and P.Value
     compareDat <- comparePrep(ttList)
     expect_s3_class(compareDat,"data.frame")
