@@ -25,5 +25,5 @@ test_that('extractCol: extractCol()', {
 
 test_that('extractCol: incorrect usage', {
     expect_error(extractCol(),
-                 regexp = "argument \"dfList\" is missing, with no default")
+                 regexp = "argument \"contrastList\" is missing, with no default")
 })
