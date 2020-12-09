@@ -1,4 +1,4 @@
-#' Create formatted scatterplot of first two cols of df
+#' Create formatted scatterplot of first two cols of data.frame
 #'
 #' Creates a nicely formatted scatterplot of the
 #' first two columns in a dataframe.  Several formatting options are
@@ -37,7 +37,7 @@
 #' Note: if p-values or FDR values are not used to color the plot, the X Unique color
 #' values are used.
 #'
-#' @param df A dataframe with the first two columns representing the x and y variables.
+#' @param compareDF A dataframe with the first two columns representing the x and y variables.
 #'          Optionally add xp and yp columns to hold p-values or FDR values.
 #' @param xlab X-axis label (Default to first column name)
 #' @param ylab Y-axis label (Default to second column name)
@@ -91,7 +91,7 @@
 #'   print(cPlot)
 #'
 #'   # Deluxe Plot with bells and whistles.
-#'   myPlot <- comparePlot(df,
+#'   myPlot <- comparePlot(compareDF,
 #'                         pThreshold = 0.5,
 #'                         xlab = "x Axis Label",
 #'                         ylab = "y Axis Label"
@@ -106,7 +106,7 @@
 #' @importFrom assertthat assert_that
 #'
 #' @export
-comparePlot <- function(df,
+comparePlot <- function(compareDF,
                         pThreshold = 0.01,
                         xlab = NULL, ylab = NULL,
                         title = NULL,
@@ -132,8 +132,8 @@ comparePlot <- function(df,
 
     set.seed(1954)
 
-    assertthat::assert_that(sum(apply(df, 2, FUN = is.numeric)) >= 2,
-                            msg = "Need at least two numeric columns in df.")
+    assertthat::assert_that(sum(apply(compareDF, 2, FUN = is.numeric)) >= 2,
+                            msg = "Need at least two numeric columns in compareDF.")
     if (!missing(symbolSize) || !missing(symbolShape) || !missing(symbolColor) || !missing(symbolFill)) {
         assertthat::assert_that(!length(symbolSize) == 4,
                                 !length(symbolShape) == 4,
@@ -155,19 +155,19 @@ comparePlot <- function(df,
                      stringsAsFactors = FALSE)
 
     # Used to set uniform square scale
-    scalemax = df[,1:2] %>% as.matrix %>% abs %>% max %>% multiply_by(1.05)
+    scalemax = compareDF[,1:2] %>% as.matrix %>% abs %>% max %>% multiply_by(1.05)
 
     # Capture the labels from the colname
-    xlabel = colnames(df)[1]
-    ylabel = colnames(df)[2]
+    xlabel = colnames(compareDF)[1]
+    ylabel = colnames(compareDF)[2]
     # Now make the column names suitable for use with aes_string
-    x = make.names(colnames(df)[1])
-    y = make.names(colnames(df)[2])
-    colnames(df)[1:2] = make.names(colnames(df)[1:2])
+    x = make.names(colnames(compareDF)[1])
+    y = make.names(colnames(compareDF)[2])
+    colnames(compareDF)[1:2] = make.names(colnames(compareDF)[1:2])
 
     # SIMPLE PLOT: plot all data (no significance measures supplied)
-    if (is.null(df[["xp"]]) | is.null(df[["yp"]])) {
-        CompPlot = ggplot(df, aes_string(x = x, y = y)) +
+    if (is.null(compareDF[["xp"]]) | is.null(compareDF[["yp"]])) {
+        CompPlot = ggplot(compareDF, aes_string(x = x, y = y)) +
             geom_point(shape = 1,
                        size = symbolSize[["xUnique"]],
                        color = symbolFill[["xUnique"]],
@@ -179,10 +179,10 @@ comparePlot <- function(df,
         }
     } else
         # DELUXE PLOT: plot groups in different colors/shapes
-        if (!is.null(df[["xp"]]) & !is.null(df[["yp"]])) {
+        if (!is.null(compareDF[["xp"]]) & !is.null(compareDF[["yp"]])) {
             # Plot the subsets
-            xindx = df[["xp"]] <= pThreshold
-            yindx = df[["yp"]] <= pThreshold
+            xindx = compareDF[["xp"]] <= pThreshold
+            yindx = compareDF[["yp"]] <= pThreshold
 
             # Boolean indexes to parse groups
             bothindx = xindx & yindx
@@ -190,23 +190,23 @@ comparePlot <- function(df,
             xindx = xindx & !bothindx # Unique to X
             yindx = yindx & !bothindx # Unique to y
 
-            # Create group factor column in df
-            df$group = NA
-            df$group[bothindx] = "Common"
-            df$group[xindx] = "X Unique"
-            df$group[yindx] = "Y Unique"
-            df$group[neitherindx] = "Not Significant"
-            df %<>% dplyr::left_join(ssc)
-            df$group %<>% factor(levels = c("Common", "X Unique", "Y Unique", "Not Significant"))
+            # Create group factor column in compareDF
+            compareDF$group = NA
+            compareDF$group[bothindx] = "Common"
+            compareDF$group[xindx] = "X Unique"
+            compareDF$group[yindx] = "Y Unique"
+            compareDF$group[neitherindx] = "Not Significant"
+            compareDF %<>% dplyr::left_join(ssc)
+            compareDF$group %<>% factor(levels = c("Common", "X Unique", "Y Unique", "Not Significant"))
 
             # Set an order field to control order of plotting
             # Plot order is 1) Not Significant plotted first, 2) randomly plot X and Y Unique
             # then plot Common last
-            df$order = sample.int(nrow(df)) + # Add random order (seeded for reproducibility)
-                nrow(df) * (df$group == "Common") +  # Assign common a high value to sort last
-                -nrow(df) * (df$group == "Not Significant") # Assign NotSig group neg values to sort first
+            compareDF$order = sample.int(nrow(compareDF)) + # Add random order (seeded for reproducibility)
+                nrow(compareDF) * (compareDF$group == "Common") +  # Assign common a high value to sort last
+                -nrow(compareDF) * (compareDF$group == "Not Significant") # Assign NotSig group neg values to sort first
 
-            CompPlot <- ggplot(df, aes_string(x = x, y = y)) +
+            CompPlot <- ggplot(compareDF, aes_string(x = x, y = y)) +
                 aes(shape = group, size = group,
                     color = group, fill = group,
                     order = order) +
@@ -228,7 +228,7 @@ comparePlot <- function(df,
 
     # Optional Decorations
     if (!is.null(rugColor)) {
-        CompPlot <- CompPlot + geom_rug(data = df,
+        CompPlot <- CompPlot + geom_rug(data = compareDF,
                                         inherit.aes = FALSE,
                                         color = rugColor,
                                         alpha = rugAlpha,
@@ -294,7 +294,7 @@ comparePlot <- function(df,
 }
 
 
-#' Create a df to use with comparePlot from topTable dfs
+#' Create a data.frame to use with comparePlot from topTable data.frames
 #'
 #' Takes two topTable dataframes and outputs a dataframe suitable for function
 #' comparePlot() (2 columns of LogRatio data and 2 columns of significant

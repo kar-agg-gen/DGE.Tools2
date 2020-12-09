@@ -29,5 +29,5 @@ test_that('tidyContrasts: tidyContrasts()', {
 
 test_that('tidyContrasts: incorrect usage', {
     expect_error(tidyContrasts(),
-                 regexp = "argument \"dgeObj\" is missing, with no default")
+                 regexp = "argument \"DGEdata\" is missing, with no default")
 })
