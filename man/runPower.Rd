@@ -50,7 +50,7 @@ ggplots (plots) or the plots plus the dataframe (both).
 }
 \examples{
 \dontrun{
-   myPowerResults <- runPower(counts, designMatrix)
+   myPowerResults <- runPower(countsMatrix, designMatrix)
 }
 
 }

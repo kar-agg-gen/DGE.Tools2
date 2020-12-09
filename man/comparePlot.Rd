@@ -2,10 +2,10 @@
 % Please edit documentation in R/comparePlot.R
 \name{comparePlot}
 \alias{comparePlot}
-\title{Create formatted scatterplot of first two cols of df}
+\title{Create formatted scatterplot of first two cols of data.frame}
 \usage{
 comparePlot(
-  df,
+  compareDF,
   pThreshold = 0.01,
   xlab = NULL,
   ylab = NULL,
@@ -31,7 +31,7 @@ comparePlot(
 )
 }
 \arguments{
-\item{df}{A dataframe with the first two columns representing the x and y variables.
+\item{compareDF}{A dataframe with the first two columns representing the x and y variables.
 Optionally add xp and yp columns to hold p-values or FDR values.}
 
 \item{pThreshold}{Used to color points (Default = 0.01)}
@@ -137,13 +137,13 @@ values are used.
   contrastList <- getType(DGEobj, "topTable")[1:2]
 
   # Capture the default logFC and P.Value
-  compareDF <- comparePrep(contrastList)
+  compareDat <- comparePrep(contrastList)
 
   # Switch to an FDR value for the significance measure
-  compareDF <- comparePrep(contrastList, significanceCol = "adj.P.Val")
+  compareDat <- comparePrep(contrastList, significanceCol = "adj.P.Val")
 
   # Draw the plot
-  cPlot <- comparePlot(compareDF, title = "Plot Title")
+  cPlot <- comparePlot(compareDat, title = "Plot Title")
   print(cPlot)
 
   # Deluxe Plot with bells and whistles.

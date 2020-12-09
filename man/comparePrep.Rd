@@ -2,7 +2,7 @@
 % Please edit documentation in R/comparePlot.R
 \name{comparePrep}
 \alias{comparePrep}
-\title{Create a df to use with comparePlot from topTable dfs}
+\title{Create a data.frame to use with comparePlot from topTable data.frames}
 \usage{
 comparePrep(contrastList, valueCol = "logFC", significanceCol = "P.Value")
 }
